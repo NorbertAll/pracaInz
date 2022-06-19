@@ -1,0 +1,10 @@
+/venv
+/venv
+notatki.txt
+/backend/backend/__pycache__
+/backend/questions/__pycache__
+/backend/quizes/__pycache__
+/backend/results/__pycache__
+/backend/questions/migrations
+/backend/quizes/migrations
+/backend/results/migrations
