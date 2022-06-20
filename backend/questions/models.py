@@ -19,4 +19,4 @@ class Answer(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"question: {self.question.text}, answer: {self.text}, correct: {self.correct}"
+        return str(self.text)
