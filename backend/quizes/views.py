@@ -57,7 +57,7 @@ class QuestionViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
-        queryset= Quiz.objects.all()
+        queryset= Question.objects.all()
         qestion=get_object_or_404(queryset, pk=pk)
         serializer=QuestionSerializer(qestion)
         return Response(serializer.data)
