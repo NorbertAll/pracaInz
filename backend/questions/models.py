@@ -1,6 +1,6 @@
 from django.db import models
 from quizes.models import Quiz
-
+import random
 class Question(models.Model):
     text = models.CharField(max_length=200)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
@@ -10,7 +10,9 @@ class Question(models.Model):
         return str(self.text)
 
     def get_answers(self):
-        return self.answer_set.all()
+        answers = list(self.answer_set.all())
+        random.shuffle(answers)
+        return answers
 
 class Answer(models.Model):
     text = models.CharField(max_length=200)
@@ -19,4 +21,4 @@ class Answer(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.text)
+        return f"id_q:'{self.question.id} question: {self.question.text}, answer: {self.text}, correct: {self.correct}"

@@ -1,9 +1,11 @@
+from urllib import response
 from django.shortcuts import render
 from .models import Quiz
 from questions.models import Question, Answer
 from results.models import Result
 from django.views.generic import ListView
 from django.http import JsonResponse
+from rest_framework.parsers import JSONParser
 from questions.models import Question, Answer
 from results.models import Result
 from .serializers import AnswerSerializer, QuestionSerializer, QuizSerializer, ResultSerializer
@@ -13,7 +15,8 @@ from rest_framework.decorators import api_view
 # Create your views here.
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
-
+from rest_framework.views import APIView
+import json
 class QuizViewSet(viewsets.ViewSet):
     def list(self, request):
         quizes = Quiz.objects.all()
@@ -130,3 +133,18 @@ class ResultViewSet(viewsets.ViewSet):
         result= Result.objects.get(pk=pk)
         result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)       
+class QuizView(APIView):
+    def get (self, request, pk=None):
+        quiz=Quiz.objects.get(pk=pk)
+        questions = []
+        for q in quiz.get_questions():
+            answers=[]
+            for a in q.get_answers():
+                answers.append(a.text)
+            questions.append({str(q): answers})
+        print(questions)    
+        data=questions
+        time=quiz.time
+        return Response({"data":data, "time":time})
+
+    
