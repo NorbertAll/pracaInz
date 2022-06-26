@@ -1,3 +1,5 @@
+import random
+import string
 from urllib import response
 from django.shortcuts import render
 from .models import Quiz
@@ -24,9 +26,15 @@ class QuizViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        serializer =QuizSerializer(data=request.data)
-        if serializer.is_valid():
+        request.data["code"]=''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+        
+       
+        serializer=QuizSerializer(data=request.data)
+       
+        if serializer.is_valid():   
+            print(request.data["code"])
             serializer.save()
+            print(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

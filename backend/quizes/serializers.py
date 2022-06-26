@@ -12,7 +12,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model=Question
-        fields= ['id', 'text', 'quiz',]
+        fields= '__all__'
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Answer

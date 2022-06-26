@@ -11,14 +11,12 @@ class Quiz(models.Model):
     number_of_questions = models.IntegerField()
     time = models.IntegerField(help_text="duration of the quiz in minutes")
     required_score_to_pass = models.IntegerField(help_text="required score in %")
-    #code=models.CharField(max_length=20, unique=True, )
-
+    code=models.CharField(max_length=20, unique=True, auto_created=True)
     def __str__(self):
+        self.code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
         return str(self.name)
 
-    def generat(self):
-        self.code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-        self.save()
+
 
     def get_questions(self):
         questions = list(self.question_set.all())
