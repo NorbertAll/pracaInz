@@ -7,8 +7,8 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import CardGroup from 'react-bootstrap/CardGroup'
 import Button from 'react-bootstrap/Button';
-
-export default class PersonList extends React.Component {
+import './QuizList.css'
+export default class QuizList extends React.Component {
   state = {
     quizes: []
   }
@@ -26,13 +26,14 @@ export default class PersonList extends React.Component {
     return (
         
       <>
-        <h1>QUIZY </h1>
-      <Row style={{  marginLeft:'1rem'}} className='cartTest'>
+        <h1 className='titlePage'>QUIZY</h1>
+       
+      <Row style={{ justifyContent: 'center', width: "100%"}} >
          
             {
               this.state.quizes
                 .map(quiz =>
-                    <Card style={{ width: '18rem', margin:'1rem', fontSize: '20px'}}>
+                    <Card style={{ width: '18rem', margin:'1rem', fontSize: '20px', backgroundColor:"#efefef"}}>
                         
                         <Card.Body>
                           <Card.Title><b>{quiz.name}</b></Card.Title>
@@ -49,7 +50,7 @@ export default class PersonList extends React.Component {
                           <Card.Link href="#">Another Link</Card.Link>
                         </Card.Body>
                     </Card>
-
+                        
 
                 
                 )
