@@ -142,8 +142,8 @@ class ResultViewSet(viewsets.ViewSet):
         result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)       
 class QuizView(APIView):
-    def get (self, request, pk=None):
-        quiz=Quiz.objects.get(pk=pk)
+    def get (self, request, code=None):
+        quiz=Quiz.objects.get(code=code)
         questions = []
         for q in quiz.get_questions():
             answers=[]

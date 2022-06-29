@@ -14,9 +14,10 @@ import {
 } from "react-router-dom";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { MainPage } from './MainPage/MainPage';
-import { StartQuiz } from './StartQuiz/StartQuiz';
+
 import { Login } from './Login/Login';
 import { Registration } from './Registration/Registration';
+import StartQuiz from './StartQuiz/StartQuiz';
 function App() {
   return (
     <div className="App"> 

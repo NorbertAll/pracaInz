@@ -11,7 +11,7 @@ router.register('answers', AnswerViewSet, basename='answers')
 router.register('results', ResultViewSet, basename='results')
 urlpatterns = [
     path('', include(router.urls)),
-    path('quiz/<int:pk>', QuizView.as_view()),
+    path('quiz/<str:code>', QuizView.as_view()),
     #path('articles/', ArticleList.as_view()),
     #path('articles/<int:id>/', ArticleDetails.as_view()),
     
