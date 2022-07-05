@@ -1,6 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
-import QuizList from './QuizList/QuizList';
+
+import QuizList from '../QuizList/QuizList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -13,18 +12,17 @@ import {
   Link,
 } from "react-router-dom";
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { MainPage } from './MainPage/MainPage';
+import StartQuiz from '../StartQuiz/StartQuiz';
+import { Login } from '../Login/Login';
+import { Registration } from '../Registration/Registration';
+import { MainPage } from '../MainPage/MainPage';
 
-import { Login } from './Login/Login';
-import { Registration } from './Registration/Registration';
-import StartQuiz from './StartQuiz/StartQuiz';
-import { Quiz } from './Quiz/Quiz';
-function App() {
+function Menu() {
   return (
-    <div className="App"> 
+    <div className="Menu"> 
     
 <BrowserRouter>
-    <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" visible={'False'} >
+<Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" visible={'False'} >
       <Container>
         <Navbar.Brand href="/">Platforma Quizowo egzaminacyjna</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -43,14 +41,7 @@ function App() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    <Routes>
-      <Route path="quiz" element={<Quiz/>}/>
-      <Route path="" element={<MainPage/>}/>
-      <Route path="exapmplequiz" element={<QuizList/>}/>
-      <Route path="startquiz" element={<StartQuiz/>}/>
-      <Route path="login" element={<Login/>}/>
-      <Route path="registraion" element={<Registration/>}/>
-    </Routes>
+ 
 </BrowserRouter>
 
     
@@ -62,4 +53,4 @@ function App() {
   );
 }
 
-export default App;
+export default Menu;
