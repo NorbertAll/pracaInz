@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -8,21 +8,19 @@ import Card from 'react-bootstrap/Card'
 import CardGroup from 'react-bootstrap/CardGroup'
 import Button from 'react-bootstrap/Button';
 import './QuizList.css'
-export default class QuizList extends React.Component {
-  state = {
-    quizes: []
-  }
-
-  componentDidMount() {
+function QuizList () {
+  
+  const [quizes, setQuizes]=useState([]);
+  useEffect(()=>{
     axios.get(`http://localhost:8000/quizes/`)
       .then(res => {
         const quizes = res.data;
         console.log(quizes)
-        this.setState({ quizes });
+        setQuizes(quizes);
       })
-  }
+    }, []);
 
-  render() {
+
     return (
         
       <>
@@ -31,9 +29,9 @@ export default class QuizList extends React.Component {
       <Row style={{ justifyContent: 'center', width: "100%"}} >
          
             {
-              this.state.quizes
+              quizes
                 .map(quiz =>
-                    <Card style={{ width: '18rem', margin:'1rem', fontSize: '20px', backgroundColor:"#efefef"}}>
+                    <Card key={quiz.id} style={{ width: '18rem', margin:'1rem', fontSize: '20px', backgroundColor:"#efefef"}}>
                         
                         <Card.Body>
                           <Card.Title><b>{quiz.name}</b></Card.Title>
@@ -62,4 +60,4 @@ export default class QuizList extends React.Component {
       </>
     )
   }
-}
+  export default QuizList

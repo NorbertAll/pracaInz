@@ -19,19 +19,24 @@ import { Login } from './Login/Login';
 import { Registration } from './Registration/Registration';
 import StartQuiz from './StartQuiz/StartQuiz';
 import { Quiz } from './Quiz/Quiz';
+import Test from './Test/Test';
+import { useState } from 'react';
+import { Context } from './helpers/Context';
 function App() {
+  const [visi, setVisi]=useState({status:true})
   return (
     <div className="App"> 
-    
+<Context.Provider value={{visi, setVisi}}> 
 <BrowserRouter>
-    <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" visible={'False'} >
+
+    {visi.status?<Navbar collapseOnSelect expand="lg" bg="primary" variant="dark" className={`${visi}`} >
       <Container>
         <Navbar.Brand href="/">Platforma Quizowo egzaminacyjna</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="">Stona główna</Nav.Link>
-            <Nav.Link as={Link} to="exapmplequiz">Przykładowe QUIZY</Nav.Link>
+            <Nav.Link as={Link}  to="exapmplequiz">Przykładowe QUIZY</Nav.Link>
             <Nav.Link as={Link} to="startquiz">Zacznij QUIZ</Nav.Link>
           </Nav>
           <Nav>
@@ -42,7 +47,8 @@ function App() {
           </Nav>
         </Navbar.Collapse>
       </Container>
-    </Navbar>
+    </Navbar>:""}
+
     <Routes>
       <Route path="quiz" element={<Quiz/>}/>
       <Route path="" element={<MainPage/>}/>
@@ -50,11 +56,12 @@ function App() {
       <Route path="startquiz" element={<StartQuiz/>}/>
       <Route path="login" element={<Login/>}/>
       <Route path="registraion" element={<Registration/>}/>
+      <Route path="test/:id" element={<Test />}/>
     </Routes>
-</BrowserRouter>
-
     
-      
+</BrowserRouter>
+    
+  </Context.Provider>    
      
     
 
