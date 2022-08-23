@@ -1,3 +1,4 @@
+import code
 import random
 import string
 from urllib import response
@@ -13,7 +14,7 @@ from results.models import Result
 from .serializers import AnswerSerializer, QuestionSerializer, QuizSerializer, ResultSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 # Create your views here.
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
@@ -154,5 +155,15 @@ class QuizView(APIView):
         data=questions
         time=quiz.time
         return Response({"data":data, "time":time})
+
+@api_view(['POST'])
+def check(request, code=None):
+    dat=request.data
+    print(code)
+    print(request.data)
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 
     

@@ -3,6 +3,8 @@ from django.urls import path, include
 from .views import QuizViewSet, QuestionViewSet, AnswerViewSet, ResultViewSet
 from rest_framework.routers import DefaultRouter
 from .views import QuizView
+from rest_framework import routers
+from quizes import views
 #article_details, article_list
 router=DefaultRouter()
 router.register('quizes', QuizViewSet, basename='quizes')
@@ -11,7 +13,8 @@ router.register('answers', AnswerViewSet, basename='answers')
 router.register('results', ResultViewSet, basename='results')
 urlpatterns = [
     path('', include(router.urls)),
-    path('quiz/<str:code>', QuizView.as_view()),
+    path('quiz/<str:code>/', QuizView.as_view()),
+    path('check/<str:code>/', views.check, name="quiz-done"),
     #path('articles/', ArticleList.as_view()),
     #path('articles/<int:id>/', ArticleDetails.as_view()),
     

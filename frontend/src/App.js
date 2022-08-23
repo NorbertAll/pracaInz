@@ -56,7 +56,7 @@ function App() {
       <Route path="startquiz" element={<StartQuiz/>}/>
       <Route path="login" element={<Login/>}/>
       <Route path="registraion" element={<Registration/>}/>
-      <Route path="test/:id" element={<Test />}/>
+      <Route path="test/:code" element={<Test />}/>
     </Routes>
     
 </BrowserRouter>

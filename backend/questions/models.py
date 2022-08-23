@@ -14,6 +14,8 @@ class Question(models.Model):
         random.shuffle(answers)
         return answers
 
+   
+
 class Answer(models.Model):
     text = models.CharField(max_length=200)
     correct = models.BooleanField(default=False)

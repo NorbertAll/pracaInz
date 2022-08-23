@@ -7,47 +7,47 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import CardGroup from 'react-bootstrap/CardGroup'
 import Button from 'react-bootstrap/Button';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom"
+import { Box, Link, TextField, Stack } from '@mui/material';
 import './StartQuiz.css'
-export default class StartQuiz extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+const StartQuiz= ()=>  {
+  const initialValues = {
+    code: "",
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
+ 
+  let navigate=useNavigate();
+  
+  const validationSchema = Yup.object().shape({
+    code: Yup.string().min(10, "za krótki kod").max(10, "za długi kod").required("Kod wymagany"),
+   
+  });
 
-  handleSubmit(event) {
-
-    axios.get(`http://localhost:8000/quiz/${this.state.value}`)
-    .then(res => {
-      const quizes = res.data;
-      console.log(quizes)
-      this.setState({ quizes });
-    })
-    alert('Podano następujące imię: ' + this.state.value);
-    event.preventDefault();
-  }
-  render() {
+const onSubmit = (data) => {
+  navigate(`/test/${data.code}`)
+}
     return (
         
-      <>
-        <h2>Podaj Kod quizu</h2>
-        <form onSubmit={this.handleSubmit}>
-        <label>
-          Kod
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <br /><br />
-        <Button variant="primary" type="submit" value="Start">
-          Start
-        </Button>
+
+       
+        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+            
+        <Form className="formContainer">
+         
+            <label>Podaj Kod quizu</label> <br/>
+            <ErrorMessage name="code" component="span" /><br />
+            <Field as={TextField} id="code" label="kod" name="code" placeholder="Kod"/>
+            <br/>
+          
+            <button type='submit'>Zacznij</button>
+        </Form>
+
+        </Formik>
         
-      </form>
+      
       
          
      
@@ -55,10 +55,10 @@ export default class StartQuiz extends React.Component {
   
 
 
-      </>
+   
     )
   }
-}
-  
-   
+
+export default StartQuiz
+
   

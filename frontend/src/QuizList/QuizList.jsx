@@ -31,7 +31,7 @@ function QuizList () {
             {
               quizes
                 .map(quiz =>
-                    <Card key={quiz.id} style={{ width: '18rem', margin:'1rem', fontSize: '20px', backgroundColor:"#efefef"}}>
+                    <Card key={quiz.id} style={{ width: '19rem', margin:'1rem', fontSize: '20px', backgroundColor:"#efefef"}}>
                         
                         <Card.Body>
                           <Card.Title><b>{quiz.name}</b></Card.Title>
