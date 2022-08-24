@@ -13,6 +13,7 @@ class Question(models.Model):
         answers = list(self.answer_set.all())
         random.shuffle(answers)
         return answers
+   
 
    
 
@@ -23,4 +24,4 @@ class Answer(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"id_q:'{self.question.id} question: {self.question.text}, answer: {self.text}, correct: {self.correct}"
+        return f"id_q:'{self.question.id}, question: {self.question.text}, answer: {self.text}, correct: {self.correct}"

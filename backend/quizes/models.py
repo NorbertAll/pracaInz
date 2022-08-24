@@ -23,6 +23,10 @@ class Quiz(models.Model):
         random.shuffle(questions)
         return questions[:self.number_of_questions]
 
+    def get_all_questions(self):
+        questions = list(self.question_set.all())
+        return questions
+
     class Meta:
         verbose_name_plural = 'Quizes'
 
