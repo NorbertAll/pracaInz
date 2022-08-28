@@ -159,14 +159,35 @@ class QuizView(APIView):
 @api_view(['POST'])
 def check(request, code=None):
     answers=Answer.objects.all()
+    quiz=Quiz.objects.get(code=code)
+    ques=quiz.get_all_questions()
+    allanswer=Quiz.objects.get(code=code).id#pobranie id quizu
+    print(ques)
+    question={}
+
     for ans in answers:
-        print(ans.question)
-        print(ans.text)
-        print(ans.correct)
+        print(ans)
+        #if(ans.question.id==allanswer):
+        #    #if(ans.correct==True):
+        #    question[ans.question]=ans.text
+        #    print(ans.question)
+        #    print(ans.text)
+                
+                
+        
+        #if(answers.id==allanswer):
+        #    question.append(str(ans.question))
     
-   
-    print(code)
-    print(request.data)
+
+    
+    #for ans in answers:
+    #    print(ans.question)
+    #    print(ans.code)
+    #    print(ans.correct)
+    #
+   #
+    #print(code)
+    #print(request.data)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
