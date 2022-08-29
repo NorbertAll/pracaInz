@@ -25,6 +25,7 @@ const Test = () => {
         axios.get(`http://localhost:8000/quiz/${code}/`)
                 .then(res => {
                 setQuiz(res.data)
+                console.log("dane", res.data);
                 const temp =[]
                 const ob={}
                 for(let i=0; i<Object.keys(res.data.data).length; i++){
@@ -56,8 +57,17 @@ const Test = () => {
 
     }
     const send = () =>{
-       
-        axios.post(`http://localhost:8000/check/${code}/`, odp)
+        
+        
+        axios.post(`http://localhost:8000/check/${code}/`, odp).then(response=>{
+            console.log(response);
+            if(response.data.data.resultBool){
+            alert("Zdałeś z wynikiem: "+ response.data.data.numberResult.toString()+"%")
+            }
+            else{
+                alert("Niezadłeś z wynikiem: "+ response.data.data.numberResult.toString()+"%")
+            }
+        })
                 
     }
 

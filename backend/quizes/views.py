@@ -158,22 +158,29 @@ class QuizView(APIView):
 
 @api_view(['POST'])
 def check(request, code=None):
+    result =0
     answers=Answer.objects.all()
     quiz=Quiz.objects.get(code=code)
-    ques=quiz.get_all_questions()
-    allanswer=Quiz.objects.get(code=code).id#pobranie id quizu
-    print(ques)
+    required_score_to_pass=float(quiz.required_score_to_pass)/100
+    c=int(quiz.number_of_questions)
     question={}
-
+    for q in quiz.get_all_questions():
+        question[str(q)] = []
+    allanswer=Quiz.objects.get(code=code).id#pobranie id quizu
     for ans in answers:
         print(ans)
-        #if(ans.question.id==allanswer):
-        #    #if(ans.correct==True):
-        #    question[ans.question]=ans.text
-        #    print(ans.question)
-        #    print(ans.text)
-                
-                
+        if(str(ans.question) in question.keys()):
+            if(ans.correct==True):
+                question[str(ans.question)].append(ans.text)
+    print(question)   
+    print(request.data)  
+    for x in request.data:
+        if(x in question.keys()):
+            request.data[x].sort()
+            question[x].sort()
+            if(request.data[x]==question[x]):
+                result=result+1
+        
         
         #if(answers.id==allanswer):
         #    question.append(str(ans.question))
@@ -188,7 +195,17 @@ def check(request, code=None):
    #
     #print(code)
     #print(request.data)
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    r=result/c
+    passE=False
+    resultE=r*100
+    if(r>=required_score_to_pass):
+        passE=True
+
+ 
+    return Response({"data":{
+        "resultBool": passE,
+        "numberResult": resultE
+    }})
 
 
 
