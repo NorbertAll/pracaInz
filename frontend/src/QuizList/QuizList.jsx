@@ -44,8 +44,8 @@ function QuizList () {
                           <ListGroup.Item>Temat: <b>{quiz.topic}</b></ListGroup.Item>
                         </ListGroup>
                         <Card.Body>
-                          <Card.Link href="#">Card Link</Card.Link>
-                          <Card.Link href="#">Another Link</Card.Link>
+                          <Card.Link href={`/test/${quiz.code}`} >{quiz.code}</Card.Link>
+                          <Card.Link href="#">Szczegóły</Card.Link>
                         </Card.Body>
                     </Card>
                         
