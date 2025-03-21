@@ -151,10 +151,10 @@ class QuizView(APIView):
             for a in q.get_answers():
                 answers.append(a.text)
             questions.append({str(q): answers})
-        print(questions)    
+        title=str(quiz)
         data=questions
         time=quiz.time
-        return Response({"data":data, "time":time})
+        return Response({"data":data, "time":time, "title":title})
 
 @api_view(['POST'])
 def check(request, code=None):

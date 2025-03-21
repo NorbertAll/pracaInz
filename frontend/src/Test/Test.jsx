@@ -74,7 +74,9 @@ const Test = () => {
   return (
     <div>
        <Container component="main" maxWidth="xs" >
-       
+       <h1>{(quiz.title)}</h1>
+       {//tu musi być formularz z imeiniem nazwiskiem i indeksem 
+       }
        {(quiz.data)?
        quiz.data.map((answer, i)=>(
         <div key={i}>
