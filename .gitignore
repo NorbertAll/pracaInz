@@ -8,3 +8,5 @@ notatki.txt
 /backend/questions/migrations
 /backend/quizes/migrations
 /backend/results/migrations
+/backend/accounts/__pycache__
+/backend/accounts/migrations

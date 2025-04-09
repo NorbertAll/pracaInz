@@ -15,9 +15,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('quiz/<str:code>/', QuizView.as_view()),
     path('check/<str:code>/', views.check, name="quiz-done"),
-    #path('articles/', ArticleList.as_view()),
-    #path('articles/<int:id>/', ArticleDetails.as_view()),
-    
-    #path('articles/', article_list),
-    #path('articles/<int:pk>/', article_details),
+
 ]
