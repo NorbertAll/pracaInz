@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+
+
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -22,11 +26,13 @@ export function Login() {
         }
         setIsLoading(true);
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/login/", formData)
+            const response = await axios.post("http://127.0.0.1:8000/api/accounts/login/", formData)
             console.log("Success", response.data);
             setSuccessMessage("Login Successfull");
             localStorage.setItem("accessToken", response.data.tokens.access);
             localStorage.setItem("refreshToken", response.data.tokens.refresh);
+            navigate("/")
+            window.location.reload();
         }
         catch (error) {
             console.log("Error during login", error.response?.data);

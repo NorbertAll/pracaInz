@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_rest_pracainz_api',
+        'NAME': 'django_rest_pracainzng_api',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
