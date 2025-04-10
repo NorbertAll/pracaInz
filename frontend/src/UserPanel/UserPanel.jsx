@@ -1,41 +1,107 @@
-import React from 'react';
-import axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
-import Button from 'react-bootstrap/Button';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from "yup";
+import React from 'react'
+import { useState, useEffect } from 'react'
+import axios from "axios"
+import Nav from 'react-bootstrap/Nav';
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Link,
+} from "react-router-dom";
+import { CreateQuiz } from '../CreateQuiz/CreateQuiz';
+import { MainUserPanel } from '../MainUserPanel/MainUserPanel';
 import { useNavigate } from "react-router-dom"
-import { Box, Link, TextField, Stack } from '@mui/material';
-
 
 
 
 export function UserPanel() {
+    let navigate = useNavigate();
+    const [username, setUsername] = useState("")
+    const [isLoggedIn, setLoggedIn] = useState(false)
 
+    useEffect(() => {
+        const checkLoggedInUser = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (token) {
+                    const config = {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    };
+                    const response = await axios.get("http://127.0.0.1:8000/api/accounts/user/", config)
+                    setLoggedIn(true)
+                    setUsername(response.data.username)
+                }
+                else {
+                    setLoggedIn(false);
+                    setUsername("");
+                }
+            }
+            catch (error) {
+                setLoggedIn(false);
+                setUsername("");
+            }
+        };
+        checkLoggedInUser()
+    }, [])
+
+    const handleLogout = async () => {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            const refreshToken = localStorage.getItem("refreshToken");
+
+            if (accessToken && refreshToken) {
+                const config = {
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                };
+                await axios.post("http://127.0.0.1:8000/api/accounts/logout/", { "refresh": refreshToken }, config)
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                setLoggedIn(false);
+                setUsername("");
+                console.log("Log out successful!")
+                window.location.reload();
+                navigate(-1)
+
+            }
+        }
+        catch (error) {
+            console.error("Failed to logout", error.response?.data || error.message)
+        }
+    }
     return (
+        <div>
+            <h1>Panel urzytkownika</h1>
+
+            <Nav justify variant="tabs" defaultActiveKey="/userpanel">
+                <Nav.Item>
+                    <Nav.Link href="#testy">Panel urzytkonika</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link href="#studenci">Stwórz test</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-2">Link</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <button onClick={handleLogout}>Logout</button>
+                </Nav.Item>
+            </Nav>
+            <p id="testy"></p>
+            Testy tu będą
 
 
+            <p id="studenci"></p>
 
-        <>
-            <h1>Panel Urzytkownika</h1>
-        </>
-
-
-
-
-
-
-
-
-
-
+            Studenci
+            <p id="wyniki"></p>
+            Wyniki tu będą
+        </div>
     )
 }
-
-
-
