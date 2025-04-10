@@ -25,6 +25,9 @@ import { useState } from 'react';
 import { Context } from './helpers/Context';
 import { useEffect } from 'react'
 import axios from "axios"
+import { MainUserPanel } from './MainUserPanel/MainUserPanel';
+import { CreateQuiz } from './CreateQuiz/CreateQuiz';
+
 
 
 
@@ -112,6 +115,8 @@ function App() {
             <Route path="registraion" element={<Registration />} />
             <Route path="test/:code" element={<Test />} />
             <Route path="userpanel" element={<UserPanel />} />
+            <Route path="userpanel/createquiz" element={<CreateQuiz />} />
+            <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
           </Routes>
 
         </BrowserRouter>
