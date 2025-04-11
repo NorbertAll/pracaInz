@@ -64,7 +64,7 @@ export function UserPanel() {
                 setUsername("");
                 console.log("Log out successful!")
                 window.location.reload();
-                navigate(-1)
+
 
             }
         }
