@@ -2,6 +2,7 @@ from multiprocessing import Value
 import string
 from django.db import models
 import random
+from accounts.models import CustomUser
 
 
 
@@ -12,6 +13,8 @@ class Quiz(models.Model):
     time = models.IntegerField(help_text="duration of the quiz in minutes")
     required_score_to_pass = models.IntegerField(help_text="required score in %")
     code=models.CharField(max_length=20, unique=True, auto_created=True)
+    creator=models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    is_public=models.BooleanField(default=False)
     def __str__(self):
         self.code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
         return str(self.name)

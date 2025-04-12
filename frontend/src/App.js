@@ -117,6 +117,8 @@ function App() {
             <Route path="userpanel" element={<UserPanel />} />
             <Route path="userpanel/createquiz" element={<CreateQuiz />} />
             <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
+            <Route path="userpanel/createnewtest" element={<CreateQuiz />} />
+            /
           </Routes>
 
         </BrowserRouter>

@@ -10,7 +10,8 @@ import {
 } from "react-router-dom";
 import { CreateQuiz } from '../CreateQuiz/CreateQuiz';
 import { MainUserPanel } from '../MainUserPanel/MainUserPanel';
-import { useNavigate } from "react-router-dom"
+import Button from 'react-bootstrap/Button';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -45,7 +46,9 @@ export function UserPanel() {
         };
         checkLoggedInUser()
     }, [])
-
+    const onSubmit = (data) => {
+        navigate(`/test/${data.code}`)
+    }
     const handleLogout = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
@@ -96,10 +99,8 @@ export function UserPanel() {
             <p id="testy"></p>
             Testy tu będą
 
+            <Button variant="warning">Nowy</Button>
 
-            <p id="studenci"></p>
-
-            Studenci
             <p id="wyniki"></p>
             Wyniki tu będą
         </div>

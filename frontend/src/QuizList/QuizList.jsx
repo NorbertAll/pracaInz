@@ -15,8 +15,10 @@ function QuizList() {
     axios.get(`http://localhost:8000/api/quizes/`)
       .then(res => {
         const quizes = res.data;
-        console.log(quizes)
-        setQuizes(quizes);
+        const qui = quizes.filter(quizes => quizes.is_public === true)
+
+
+        setQuizes(qui);
       })
   }, []);
 
