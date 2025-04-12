@@ -19,6 +19,7 @@ export function UserPanel() {
     let navigate = useNavigate();
     const [username, setUsername] = useState("")
     const [isLoggedIn, setLoggedIn] = useState(false)
+    const [userId, setUserId] = useState(-1)
 
     useEffect(() => {
         const checkLoggedInUser = async () => {
@@ -33,6 +34,9 @@ export function UserPanel() {
                     const response = await axios.get("http://127.0.0.1:8000/api/accounts/user/", config)
                     setLoggedIn(true)
                     setUsername(response.data.username)
+                    setUserId(response.data.id)
+                    console.log(response.data.id);
+
                 }
                 else {
                     setLoggedIn(false);
@@ -46,8 +50,8 @@ export function UserPanel() {
         };
         checkLoggedInUser()
     }, [])
-    const onSubmit = (data) => {
-        navigate(`/test/${data.code}`)
+    const createtest = (data) => {
+        navigate(`/userpanel/createnewtest`)
     }
     const handleLogout = async () => {
         try {
@@ -98,8 +102,8 @@ export function UserPanel() {
             </Nav>
             <p id="testy"></p>
             Testy tu będą
-
-            <Button variant="warning">Nowy</Button>
+            <br />
+            <Button variant="warning" onClick={createtest}>Nowy</Button>
 
             <p id="wyniki"></p>
             Wyniki tu będą
