@@ -27,7 +27,7 @@ import { useEffect } from 'react'
 import axios from "axios"
 import { MainUserPanel } from './MainUserPanel/MainUserPanel';
 import { CreateQuiz } from './CreateQuiz/CreateQuiz';
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 
@@ -126,7 +126,9 @@ function App() {
       </Context.Provider>
 
 
-
+      <footer className="bg-primary text-white text-center py-3 mt-auto">
+        &copy; 2025 Norbert Gutkowski | Projekt inżynierski
+      </footer>
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from "axios"
+import { motion } from "framer-motion";
+
 
 export function MainPage() {
 
@@ -61,14 +63,62 @@ export function MainPage() {
     }
     return (
         <div>
-            {isLoggedIn ? (
-                <>
-                    <h2>Hi, {username}. Thanks for loggin in!</h2>
-                    <button onClick={handleLogout}>Logout</button>
-                </>
-            ) : (
-                <h2>Please Login</h2>
-            )}
+            <section className="text-white bg-gradient bg-primary py-5 text-center">
+                <motion.div
+                    className="container"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <h1 className="display-4 fw-bold">Twórz testy. Rozwiązuj quizy. Ucz się skutecznie.</h1>
+                    <p className="lead mt-3 mb-4">
+                        Patforma Quizowo egzaminacyjna to platforma edukacyjna powstała jako praca inżynierska Norberta Gutkowskiego, która umożliwia tworzenie testów, przesyłanie ich uczniom i analizę wyników.
+                    </p>
+                    <a href="/exapmplequiz" className="btn btn-warning btn-lg fw-semibold">Rozpocznij naukę</a>
+                </motion.div>
+            </section>
+
+
+            <section className="py-5 bg-light">
+                <div className="container">
+                    <div className="row g-4 text-center">
+                        {[
+                            {
+                                title: "✍️ Tworzenie testów",
+                                desc: "Twórz własne quizy i egzaminy, udostępniaj je uczniom jednym kliknięciem."
+                            },
+                            {
+                                title: "🎯 Quizy tematyczne",
+                                desc: "Wybieraj spośród różnych kategorii i sprawdzaj swoją wiedzę w czasie rzeczywistym."
+                            },
+                            {
+                                title: "📝 Symulacje egzaminów",
+                                desc: "Przygotuj się do prawdziwego egzaminu dzięki realistycznym testom próbnych."
+                            },
+                            {
+                                title: "📊 Statystyki",
+                                desc: "Śledź postępy swoich uczniów"
+                            }
+                        ].map((feature, index) => (
+                            <motion.div
+                                className="col-md-6 col-lg-3"
+                                key={index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.2 }}
+                            >
+                                <div className="card shadow-sm h-100">
+                                    <div className="card-body">
+                                        <h5 className="card-title fw-bold">{feature.title}</h5>
+                                        <p className="card-text">{feature.desc}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </div>
     )
 }

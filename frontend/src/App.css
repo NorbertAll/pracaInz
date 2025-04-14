@@ -3,6 +3,10 @@
 .App {
   text-align: center;
   font-family: 'Lexend', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  flex: 1
 }
 
 

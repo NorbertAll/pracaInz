@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from 'react'
 import App from '../App'
 import Form from 'react-bootstrap/Form';
 import axios from "axios"
+import Button from 'react-bootstrap/Button';
 
 export const CreateQuiz = props => {
 
@@ -73,7 +74,7 @@ export const CreateQuiz = props => {
                     onChange={handleChange}
                 ></input>{" "}<br />
                 <br />
-                <button type='submit' onClick={handleSubmit}>Zapisz</button>
+                <Button variant="warning" type='submit' onClick={handleSubmit}>Zapisz</Button>
             </form>
         </div>
 
