@@ -28,6 +28,7 @@ import axios from "axios"
 import { MainUserPanel } from './MainUserPanel/MainUserPanel';
 import { CreateQuiz } from './CreateQuiz/CreateQuiz';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { EditQuiz } from './EditQuiz/EditQuiz';
 
 
 
@@ -118,6 +119,7 @@ function App() {
             <Route path="userpanel/createquiz" element={<CreateQuiz />} />
             <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
             <Route path="userpanel/createnewtest" element={<CreateQuiz />} />
+            <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             /
           </Routes>
 

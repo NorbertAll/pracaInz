@@ -20,6 +20,7 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 import json
+
 class QuizViewSet(viewsets.ViewSet):
     def list(self, request):
         quizes = Quiz.objects.all()
@@ -45,8 +46,11 @@ class QuizViewSet(viewsets.ViewSet):
         serializer=QuizSerializer(quiz)
         return Response(serializer.data)
     def update(self, request, pk=None):
-        quiz= Quiz.objects.get(pk)
-        serializer =QuizSerializer(quiz, data=request.data)
+        try:
+            quiz = Quiz.objects.get(pk=pk)
+        except Quiz.DoesNotExist:
+            return Response({'error': 'Quiz nie istnieje.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer =QuizSerializer(quiz, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -155,6 +159,21 @@ class QuizView(APIView):
         data=questions
         time=quiz.time
         return Response({"data":data, "time":time, "title":title})
+
+class QuizView(APIView):
+    def get (self, request, code=None):
+        quiz=Quiz.objects.get(code=code)
+        questions = []
+        for q in quiz.get_questions():
+            answers=[]
+            for a in q.get_answers():
+                answers.append(a.text)
+            questions.append({str(q): answers})
+        title=str(quiz)
+        data=questions
+        time=quiz.time
+        return Response({"data":data, "time":time, "title":title})
+
 
 @api_view(['POST'])
 def check(request, code=None):

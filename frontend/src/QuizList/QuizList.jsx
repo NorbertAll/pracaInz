@@ -33,7 +33,7 @@ function QuizList() {
         {
           quizes
             .map(quiz =>
-              <Card key={quiz.id} style={{ width: '19rem', margin: '1rem', fontSize: '20px', backgroundColor: "#efefef" }}>
+              <Card key={quiz.id} style={{ width: '19rem', margin: '1rem', fontSize: '20px', backgroundColor: "#BAD4F9" }}>
 
                 <Card.Body>
                   <Card.Title><b>{quiz.name}</b></Card.Title>
@@ -42,12 +42,12 @@ function QuizList() {
                 <ListGroup className="list-group-flush">
                   <ListGroup.Item>Liczba pytań: <b>{quiz.number_of_questions}</b></ListGroup.Item>
                   <ListGroup.Item>Próg zdania: <b>{quiz.required_score_to_pass}</b>%</ListGroup.Item>
-                  <ListGroup.Item>Czas na rozwiązanie: <b>{quiz.time}</b>%</ListGroup.Item>
+                  <ListGroup.Item>Czas na rozwiązanie: <b>{quiz.time}</b>min</ListGroup.Item>
                   <ListGroup.Item>Temat: <b>{quiz.topic}</b></ListGroup.Item>
                 </ListGroup>
                 <Card.Body>
-                  <Card.Link href={`/test/${quiz.code}`} >{quiz.code}</Card.Link>
-                  <Card.Link href="#">Szczegóły</Card.Link>
+                  <Card.Link className=" btn btn-warning" href={`/test/${quiz.code}`} >Start</Card.Link>
+                  <Card.Link className=" btn btn-primary" href="#">Szczegóły</Card.Link>
                 </Card.Body>
               </Card>
 

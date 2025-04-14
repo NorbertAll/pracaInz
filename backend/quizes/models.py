@@ -18,7 +18,7 @@ class Quiz(models.Model):
     def __str__(self):
         self.code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
         return str(self.name)
-
+    
 
 
     def get_questions(self):
@@ -30,6 +30,7 @@ class Quiz(models.Model):
         questions = list(self.question_set.all())
         return questions
 
+    
     class Meta:
         verbose_name_plural = 'Quizes'
 

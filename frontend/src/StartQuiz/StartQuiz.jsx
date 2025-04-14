@@ -31,26 +31,28 @@ const StartQuiz = () => {
     navigate(`/test/${data.code}`)
   }
   return (
+    <>
+      <br />
+      <h3 >Aby przejść do rozwiązywania quizu wpisz KOD przesłany przez Nauczyciela, bądź Twórcę testu. </h3><br />
+      <div className="d-flex justify-content-center align-items-center vh-90">
+
+        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} className="ms-5">
+
+          <Form className="p-5 text-center ">
+            <br />
+            <label>Podaj Kod quizu</label> <br />
+            <ErrorMessage name="code" component="span" className="text-danger" /><br />
+            <Field as={TextField} id="code" label="kod" name="code" placeholder="Kod" />
+            <br />
+
+            <button type='submit'>Zacznij</button>
+          </Form>
+
+        </Formik >
 
 
-    <div className="d-flex justify-content-center align-items-center vh-90">
-      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} className="ms-5">
-
-        <Form className="p-5 text-center ">
-
-          <label>Podaj Kod quizu</label> <br />
-          <ErrorMessage name="code" component="span" className="text-danger" /><br />
-          <Field as={TextField} id="code" label="kod" name="code" placeholder="Kod" />
-          <br />
-
-          <button type='submit'>Zacznij</button>
-        </Form>
-
-      </Formik >
-
-
-    </div >
-
+      </div >
+    </>
 
 
 

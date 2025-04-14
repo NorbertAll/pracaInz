@@ -13,16 +13,21 @@ import { MainUserPanel } from '../MainUserPanel/MainUserPanel';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
 
-
+import ListGroup from 'react-bootstrap/ListGroup'
+import Card from 'react-bootstrap/Card'
+import CardGroup from 'react-bootstrap/CardGroup'
 
 export function UserPanel() {
     let navigate = useNavigate();
     const [username, setUsername] = useState("")
     const [isLoggedIn, setLoggedIn] = useState(false)
-    const [userId, setUserId] = useState(-1)
+    const [userId, setUserId] = useState(0)
+    const [quizes, setQuizes] = useState([]);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const checkLoggedInUser = async () => {
+        const allData = [];
+        const fetchAll = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (token) {
@@ -35,24 +40,53 @@ export function UserPanel() {
                     setLoggedIn(true)
                     setUsername(response.data.username)
                     setUserId(response.data.id)
-                    console.log(response.data.id);
+
 
                 }
                 else {
                     setLoggedIn(false);
                     setUsername("");
                 }
-            }
-            catch (error) {
+
+
+
+                const tests =
+                    await axios.get(`http://localhost:8000/api/quizes/`)
+                        .then(res => {
+                            const quizes = res.data;
+
+
+                            const qui = quizes.filter(quizes => quizes.creator === userId)
+
+
+                            setQuizes(quizes);
+
+                        })
+                allData.push(tests.res.data);
+
+
+
+            } catch (error) {
                 setLoggedIn(false);
                 setUsername("");
+            } finally {
+
+                setLoading(false);
+                console.log(quizes);
+                console.log(userId);
+
+                quizes.filter(quizes => quizes.creator === userId)
+                console.log(quizes);
             }
-        };
-        checkLoggedInUser()
+
+
+        }
+        fetchAll();
+
+
     }, [])
-    const createtest = (data) => {
-        navigate(`/userpanel/createnewtest`)
-    }
+
+
     const handleLogout = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
@@ -79,6 +113,34 @@ export function UserPanel() {
             console.error("Failed to logout", error.response?.data || error.message)
         }
     }
+    const deletequiz = async (id) => {
+
+        try {
+
+            console.log(id);
+
+            axios.delete(`http://127.0.0.1:8000/api/quizes/${id}/`)
+                .then(() => {
+                    alert("Test został usunięty");
+                })
+                .catch((err) => {
+                    console.error("Błąd usuwania:", err);
+                });
+        }
+        catch (error) {
+            console.log(error);
+
+        }
+
+    }
+    const editquiz = (id) => {
+        navigate(`/userpanel/editquiz/${id}`)
+
+    }
+    const createtest = (data) => {
+        navigate(`/userpanel/createnewtest`)
+    }
+
     return (
         <div>
             <h1>Panel urzytkownika</h1>
@@ -101,12 +163,62 @@ export function UserPanel() {
                 </Nav.Item>
             </Nav>
             <p id="testy"></p>
-            Testy tu będą
+            <h3 className="mb-3">Lista dostępnych testów</h3>
+            <div className="table-responsive">
+                <table className="table table-striped table-hover table-bordered align-middle shadow">
+
+                    <thead className="table-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Nazwa testu</th>
+                            <th>Temat</th>
+                            <th>Liczba pytań</th>
+                            <th>Próg zaliczenia</th>
+                            <th>Czas</th>
+                            <th>Akcja</th>
+
+                        </tr>
+                    </thead>{loading ? (
+                        <p>Ładowanie...</p>
+                    ) : (<>
+                        <tbody>
+
+                            {quizes.map((quiz) =>
+                                quiz.creator === userId ?
+                                    (
+
+
+                                        <tr key={quiz.id}>
+                                            <td>{quiz.id}</td>
+                                            <td>{quiz.name}</td>
+                                            <td>{quiz.topic}</td>
+                                            <td>{quiz.number_of_questions}</td>
+                                            <td>{quiz.required_score_to_pass}</td>
+                                            <td>{quiz.time}</td>
+
+                                            <td>
+                                                <button className="btn btn-sm btn-outline-primary" onClick={() => editquiz(quiz.id)}>
+                                                    Edytuj
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deletequiz(quiz.id)}>
+                                                    Usuń
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ) : null)}
+                        </tbody></>)}
+                </table>
+            </div>
+
+
+
+
             <br />
-            <Button variant="warning" onClick={createtest}>Nowy</Button>
+            <Button variant="warning" onClick={createtest}>Stwórz Nowy Test</Button>
 
             <p id="wyniki"></p>
             Wyniki tu będą
-        </div>
+        </div >
     )
 }
