@@ -87,8 +87,8 @@ function App() {
 
                   {isLoggedIn ? (
                     <>
-                      <Nav.Link as={Link} to="userpanel">Witaj<br />{username}</Nav.Link>
-                      <Nav.Link as={Link} to="userpanel">Panel Urzytkownika</Nav.Link>
+                      <Nav.Link as={Link} to="userpanel">Witaj {username}</Nav.Link>
+                      <Nav.Link as={Link} to="userpanel">Panel Użytkownika</Nav.Link>
                     </>
                   ) : (
                     <>

@@ -23,6 +23,7 @@ export function UserPanel() {
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [userId, setUserId] = useState(0)
     const [quizes, setQuizes] = useState([]);
+    const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -63,9 +64,19 @@ export function UserPanel() {
 
                         })
                 allData.push(tests.res.data);
+                const results =
+                    await axios.get(`http://localhost:8000/api/results/`)
+                        .then(res => {
+                            const results = res.data;
 
 
 
+
+
+                            setResults(results);
+
+                        })
+                allData.push(results.res.data);
             } catch (error) {
                 setLoggedIn(false);
                 setUsername("");
@@ -133,6 +144,26 @@ export function UserPanel() {
         }
 
     }
+    const deleteresult = async (id) => {
+
+        try {
+
+            console.log(id);
+
+            axios.delete(`http://127.0.0.1:8000/api/result/${id}/`)
+                .then(() => {
+                    alert("Wynik został usunięty");
+                })
+                .catch((err) => {
+                    console.error("Błąd usuwania:", err);
+                });
+        }
+        catch (error) {
+            console.log(error);
+
+        }
+
+    }
     const editquiz = (id) => {
         navigate(`/userpanel/editquiz/${id}`)
 
@@ -162,8 +193,8 @@ export function UserPanel() {
                     <button onClick={handleLogout}>Logout</button>
                 </Nav.Item>
             </Nav>
-            <p id="testy"></p>
-            <h3 className="mb-3">Lista dostępnych testów</h3>
+
+            <h3 className="mb-3" id="testy">Lista dostępnych testów</h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
 
@@ -179,7 +210,7 @@ export function UserPanel() {
 
                         </tr>
                     </thead>{loading ? (
-                        <p>Ładowanie...</p>
+                        <p>Brak testów do wyświtelenia</p>
                     ) : (<>
                         <tbody>
 
@@ -217,8 +248,55 @@ export function UserPanel() {
             <br />
             <Button variant="warning" onClick={createtest}>Stwórz Nowy Test</Button>
 
-            <p id="wyniki"></p>
-            Wyniki tu będą
+            <h3 className="mb-3" id="testy">Lista dostępnych Wyników </h3>
+            <div className="table-responsive">
+                <table className="table table-striped table-hover table-bordered align-middle shadow">
+
+                    <thead className="table-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Imię</th>
+                            <th>Nazwisko</th>
+                            <th>Indeks</th>
+                            <th>Wynik</th>
+                            <th>Akcja</th>
+
+                        </tr>
+                    </thead>{loading ? (
+                        <p>Brak testów do wyświtelenia</p>
+                    ) : (<>
+                        <tbody>
+
+                            {results.map((result) =>
+                                result.creator === userId ?
+                                    (
+
+
+                                        <tr key={result.id}>
+                                            <td>{result.id}</td>
+                                            <td>{result.name}</td>
+                                            <td>{result.last_name}</td>
+                                            <td>{result.indeks}</td>
+                                            <td>{result.score}</td>
+
+
+                                            <td>
+
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteresult(results.id)}>
+                                                    Usuń
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ) : null)}
+                        </tbody></>)}
+                </table>
+            </div>
+
+
+
+
+            <br />
+            <Button variant="warning" onClick={createtest}>Stwórz Nowy Test</Button>
         </div >
     )
 }
