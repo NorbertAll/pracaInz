@@ -168,6 +168,10 @@ export function UserPanel() {
         navigate(`/userpanel/editquiz/${id}`)
 
     }
+    const questions = (id) => {
+        navigate(`/userpanel/questions/${id}`)
+
+    }
     const createtest = (data) => {
         navigate(`/userpanel/createnewtest`)
     }
@@ -228,6 +232,10 @@ export function UserPanel() {
                                             <td>{quiz.time}</td>
 
                                             <td>
+                                                <button className="btn btn-sm btn-outline-warning" onClick={() => questions(quiz.id)}>
+                                                    Pytania
+                                                </button>
+                                                &nbsp;&nbsp;
                                                 <button className="btn btn-sm btn-outline-primary" onClick={() => editquiz(quiz.id)}>
                                                     Edytuj
                                                 </button>

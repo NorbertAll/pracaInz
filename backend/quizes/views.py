@@ -20,6 +20,8 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 import json
+from django.core.serializers import serialize
+from rest_framework.decorators import action
 
 class QuizViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -70,6 +72,7 @@ class QuestionViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print("❌ Błędy walidacji pytania:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
@@ -88,6 +91,13 @@ class QuestionViewSet(viewsets.ViewSet):
         qestion= Question.objects.get(pk=pk)
         qestion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    def partial_update(self, request, pk=None):
+        question = get_object_or_404(Question, pk=pk)
+        serializer = QuestionSerializer(question, data=request.data,    partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.   HTTP_400_BAD_REQUEST)
 class AnswerViewSet(viewsets.ViewSet):
     def list(self, request):
         answers = Answer.objects.all()
@@ -117,6 +127,13 @@ class AnswerViewSet(viewsets.ViewSet):
         answer= Answer.objects.get(pk=pk)
         answer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    def partial_update(self, request, pk=None):
+        answer = get_object_or_404(Answer, pk=pk)
+        serializer = AnswerSerializer(answer, data=request.data,    partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.   HTTP_400_BAD_REQUEST)
 class ResultViewSet(viewsets.ViewSet):
     def list(self, request):
         results = Result.objects.all()
@@ -160,19 +177,25 @@ class QuizView(APIView):
         time=quiz.time
         return Response({"data":data, "time":time, "title":title})
 
-class QuizView(APIView):
-    def get (self, request, code=None):
-        quiz=Quiz.objects.get(code=code)
-        questions = []
-        for q in quiz.get_questions():
-            answers=[]
-            for a in q.get_answers():
-                answers.append(a.text)
-            questions.append({str(q): answers})
-        title=str(quiz)
-        data=questions
-        time=quiz.time
-        return Response({"data":data, "time":time, "title":title})
+class QuestionViewSelect(APIView):
+    def get (self, request, id=None):
+        quiz=Question.objects.get(quiz=id)
+        answers = Answer.objects.filter(question_id=1)
+        json_data = serialize('json', answers) 
+        data = json.loads(json_data) 
+        combined = [
+            {
+                'id': item['pk'],         
+                **item['fields']         
+            }
+            for item in data
+        ]
+        
+        question_data = {
+            "id": quiz.id,
+            "text": quiz.text,
+        }
+        return Response({  "question": question_data, "answers": combined})
 
 
 @api_view(['POST'])

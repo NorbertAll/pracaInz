@@ -29,6 +29,7 @@ import { MainUserPanel } from './MainUserPanel/MainUserPanel';
 import { CreateQuiz } from './CreateQuiz/CreateQuiz';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { EditQuiz } from './EditQuiz/EditQuiz';
+import { QuestionsPanel } from './QuestionsPanel/QuestionsPanel';
 
 
 
@@ -120,7 +121,8 @@ function App() {
             <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
             <Route path="userpanel/createnewtest" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
-            /
+            <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
+
           </Routes>
 
         </BrowserRouter>
