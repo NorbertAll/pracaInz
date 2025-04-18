@@ -1,67 +1,78 @@
 import React from 'react';
-import axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
-import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom"
-import { Box, Link, TextField, Stack } from '@mui/material';
-import './StartQuiz.css'
-
+import * as Yup from 'yup';
+import { TextField, Box, Button as MUIButton, Typography, Paper } from '@mui/material';
+import './StartQuiz.css';
 
 const StartQuiz = () => {
   const initialValues = {
-    code: "",
-  }
+    code: '',
+  };
 
-
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    code: Yup.string().min(10, "za krótki kod").max(10, "za długi kod").required("Kod wymagany"),
-
+    code: Yup.string()
+      .min(10, 'Za krótki kod')
+      .max(10, 'Za długi kod')
+      .required('Kod jest wymagany'),
   });
 
   const onSubmit = (data) => {
-    navigate(`/test/${data.code}`)
-  }
+    navigate(`/test/${data.code}`);
+  };
+
   return (
     <>
-      <br />
-      <h3 >Aby przejść do rozwiązywania quizu wpisz KOD przesłany przez Nauczyciela, bądź Twórcę testu. </h3><br />
-      <div className="d-flex justify-content-center align-items-center vh-90">
+      <Box className="start-quiz-container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+        <Typography variant="h5" gutterBottom textAlign="center">
+          Aby przejść do rozwiązywania quizu, wpisz <strong>KOD</strong> przesłany przez nauczyciela lub twórcę testu.
+        </Typography>
 
-        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} className="ms-5">
+        <Paper elevation={4} sx={{ padding: 4, marginTop: 3, borderRadius: 3, width: '100%', maxWidth: 400 }}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            validationSchema={validationSchema}
+          >
+            {() => (
+              <Form>
+                <Typography variant="subtitle1" gutterBottom>
+                  Podaj kod quizu:
+                </Typography>
 
-          <Form className="p-5 text-center ">
-            <br />
-            <label>Podaj Kod quizu</label> <br />
-            <ErrorMessage name="code" component="span" className="text-danger" /><br />
-            <Field as={TextField} id="code" label="kod" name="code" placeholder="Kod" />
-            <br />
+                <Field
+                  as={TextField}
+                  name="code"
+                  label="Kod quizu"
+                  fullWidth
+                  variant="outlined"
+                  sx={{ mb: 2 }}
+                />
+                <ErrorMessage
+                  name="code"
+                  component="div"
+                  className="text-danger"
+                  style={{ marginBottom: '1rem' }}
+                />
 
-            <button type='submit'>Zacznij</button>
-          </Form>
-
-        </Formik >
-
-
-      </div >
+                <MUIButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ mt: 2, fontWeight: 'bold' }}
+                >
+                  Rozpocznij
+                </MUIButton>
+              </Form>
+            )}
+          </Formik>
+        </Paper>
+      </Box>
     </>
+  );
+};
 
-
-
-
-
-
-  )
-}
-
-export default StartQuiz
-
-
+export default StartQuiz;
