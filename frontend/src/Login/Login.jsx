@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { Form, Button, Alert, Spinner, Container, Row, Col } from 'react-bootstrap';
 
 export function Login() {
     const [formData, setFormData] = useState({
@@ -8,67 +9,102 @@ export function Login() {
         password: ""
     });
 
-
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [error, setError] = useState(null);
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
-        })
+        });
     };
-    const [isLoading, setIsLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [error, setError] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (isLoading) {
-            return
-        }
+        if (isLoading) return;
+
         setIsLoading(true);
+        setError(null);
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/accounts/login/", formData)
-            console.log("Success", response.data);
-            setSuccessMessage("Login Successfull");
+            const response = await axios.post("http://127.0.0.1:8000/api/accounts/login/", formData);
+            setSuccessMessage("Logowanie zakończone sukcesem.");
             localStorage.setItem("accessToken", response.data.tokens.access);
             localStorage.setItem("refreshToken", response.data.tokens.refresh);
-            navigate("/")
+            navigate("/");
             window.location.reload();
-        }
-        catch (error) {
-            console.log("Error during login", error.response?.data);
+        } catch (error) {
             if (error.response && error.response.data) {
                 Object.keys(error.response.data).forEach(field => {
                     const errorMessages = error.response.data[field];
                     if (errorMessages && errorMessages.length > 0) {
                         setError(errorMessages[0]);
                     }
-                })
+                });
             }
-        }
-        finally {
+        } finally {
             setIsLoading(false);
         }
     };
+
     return (
-        <div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-            <h2>Login:</h2>
-            <form >
+        <Container className="mt-5">
+            <Row className="justify-content-center">
+                <Col md={6} className="text-center">
+                    <h2 className="mb-4">Logowanie</h2>
 
-                <label>email:</label><br />
-                <input type='email' name='email' value={formData.email}
-                    onChange={handleChange}
-                ></input><br />
-                <br />
-                <label>password:</label><br />
-                <input type='password' name='password' value={formData.password}
-                    onChange={handleChange}
-                ></input>{" "}<br />
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
-                <br /><br />
-                <button type='submit' disabled={isLoading} onClick={handleSubmit}>Login</button>
-            </form>
-        </div>
-    )
+                    <Form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "300px" }}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Email:</Form.Label>
+                            <Form.Control
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Wprowadź email"
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-4">
+                            <Form.Label>Hasło:</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Wprowadź hasło"
+                                required
+                            />
+                        </Form.Group>
+
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-100"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    /> Logowanie...
+                                </>
+                            ) : (
+                                "Zaloguj się"
+                            )}
+                        </Button>
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
