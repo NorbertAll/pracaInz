@@ -178,24 +178,19 @@ class QuizView(APIView):
         return Response({"data":data, "time":time, "title":title})
 
 class QuestionViewSelect(APIView):
-    def get (self, request, id=None):
-        quiz=Question.objects.get(quiz=id)
-        answers = Answer.objects.filter(question_id=1)
-        json_data = serialize('json', answers) 
-        data = json.loads(json_data) 
-        combined = [
-            {
-                'id': item['pk'],         
-                **item['fields']         
+    def get(self, request, id=None):
+        questions = Question.objects.filter(quiz=id)
+        all_questions_data = []
+        for question in questions:
+            answers = Answer.objects.filter(question=question)
+            serialized_answers = AnswerSerializer(answers,many=True).   data
+            question_data = {
+                "id": question.id,
+                "text": question.text,
+                "answers": serialized_answers
             }
-            for item in data
-        ]
-        
-        question_data = {
-            "id": quiz.id,
-            "text": quiz.text,
-        }
-        return Response({  "question": question_data, "answers": combined})
+            all_questions_data.append(question_data)
+        return Response({"questions": all_questions_data})
 
 
 @api_view(['POST'])

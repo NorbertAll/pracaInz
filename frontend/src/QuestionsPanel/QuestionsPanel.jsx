@@ -16,29 +16,21 @@ export const QuestionsPanel = props => {
 
         const downloadAnswerAndQuestions = async () => {
             try {
-                const res = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}`);
-                console.log(res.data);
+                const response = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}/`);
+                console.log(response.data); // <- sprawdź, co tam jest
+                const questions = response.data.questions;
 
-                const answerss = res.data.answers.map(answer => ({
-
-                    id: answer.id,
-                    text: answer.text,
-                    correct: answer.correct,
-                }));
-                const question = {
-                    id: res.data.question.id,
-                    text: res.data.question.text,
-                    answers: answerss
+                if (questions && Array.isArray(questions)) {
+                    const processed = questions.map(q => ({
+                        ...q,
+                        answers: q.answers || [],
+                    }));
+                    setQuestions(processed); // lub co tam robisz dalej
+                } else {
+                    console.warn("Brak pytań w odpowiedzi:", response.data);
                 }
-                console.log([question]);
-
-                setQuestions([question])
-
-
-
-            }
-            catch (err) {
-                console.error("Błąd pobierania pytań:", err);
+            } catch (error) {
+                console.error("❌ Błąd pobierania pytań:", error);
             }
         };
         downloadAnswerAndQuestions();
@@ -71,38 +63,50 @@ export const QuestionsPanel = props => {
         setAnswers(nowe);
     };
 
-    const zapiszPytanie = () => {
+    const zapiszPytanie = async () => {
         if (!textQuestion.trim()) return;
 
-        if (edytowaneId !== null) {
-            // aktualizacja istniejącego questions
-            const nowe = questions.map((p) =>
-                p.id === edytowaneId
-                    ? {
-                        ...p,
-                        text: textQuestion,
-                        answers: [...answers]
-                    }
-                    : p
-            );
-            setQuestions(nowe);
-        } else {
-            // dodanie nowego questions
-            const nowePytanie = {
-                id: Date.now(),
+        try {
+            // 1. POST pytanie
+            const res = await axios.post("http://127.0.0.1:8000/api/questions/", {
                 text: textQuestion,
-                answers: [...answers]
-            };
-            setQuestions([...questions, nowePytanie]);
-        }
+                quiz: id
+            });
 
-        // reset
-        setTextQuestions("");
-        setAnswers([
-            { text: "", correct: false },
-            { text: "", correct: false }
-        ]);
-        setEdytowaneId(null);
+            const questionId = res.data.id;
+
+            // 2. POST odpowiedzi
+            for (const ans of answers) {
+                await axios.post("http://127.0.0.1:8000/api/answers/", {
+                    text: ans.text,
+                    correct: ans.correct,
+                    question: questionId
+                });
+            }
+
+            // 3. Pobierz aktualne Question od nowa (bez ręcznego doklejania)
+            const refreshed = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}`);
+            const newQuestions = refreshed.data.questions;
+
+            if (Array.isArray(newQuestions)) {
+                setQuestions(newQuestions); // ✅ Nadpisz całą listę
+            } else {
+                console.warn("Brak poprawnych danych pytań po zapisie:", refreshed.data);
+            }
+
+            // 4. Reset formularza
+            setTextQuestions("");
+            setAnswers([
+                { text: "", correct: false },
+                { text: "", correct: false }
+            ]);
+            setEdytowaneId(null);
+
+            alert("Pytanie dodane!");
+        } catch (err) {
+            console.error("Błąd przy dodawaniu Question:", err);
+            alert("Nie udało się dodać Question.");
+        }
     };
 
     const rozpocznijEdycje = (pytanie) => {
@@ -123,7 +127,7 @@ export const QuestionsPanel = props => {
         const question = questions[0];
 
         if (!question || !question.text || question.answers.length < 2) {
-            alert("Brakuje danych pytania lub odpowiedzi.");
+            alert("Brakuje danych Question lub odpowiedzi.");
             return;
         }
 
@@ -162,6 +166,20 @@ export const QuestionsPanel = props => {
         } catch (err) {
             console.error("Błąd przy zapisie:", err);
             alert("Coś poszło nie tak!");
+        }
+    };
+    const deleteQestion = async (idQuestion) => {
+        const confirmDelete = window.confirm("Czy na pewno chcesz usunąć to pytanie?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`http://127.0.0.1:8000/api/questions/${idQuestion}/`);
+            const refreshed = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}`);
+            setQuestions(refreshed.data.questions);
+            alert("Pytanie usunięte!");
+        } catch (err) {
+            console.error("❌ Błąd podczas usuwania Pytania:", err);
+            alert("Nie udało się usunąć Pytania.");
         }
     };
     return (
@@ -230,8 +248,9 @@ export const QuestionsPanel = props => {
                         <tr key={p.id}>
                             <td>{p.text}</td>
                             <td>
+
                                 <ul className="mb-0">
-                                    {p.answers.map((o, i) => (
+                                    {(p.answers || []).map((o, i) => (
                                         <li key={i}>
                                             {o.text}{" "}
                                             {o.correct && (
@@ -240,10 +259,15 @@ export const QuestionsPanel = props => {
                                         </li>
                                     ))}
                                 </ul>
+
                             </td>
                             <td>
                                 <button className="btn btn-sm btn-warning" onClick={() => rozpocznijEdycje(p)}>
                                     Edytuj
+                                </button>
+                                &nbsp;&nbsp;
+                                <button className="btn btn-sm btn-danger" onClick={() => deleteQestion(p.id)}>
+                                    Usuń
                                 </button>
                             </td>
                         </tr>
