@@ -3,10 +3,10 @@ import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
+import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import './QuizList.css';
 import './QuizList.css'
 function QuizList() {
 
@@ -26,7 +26,8 @@ function QuizList() {
   return (
 
     <>
-      <h1 className='titlePage'>QUIZY</h1>
+
+      <h1 className="text-center mb-4 titlePage">📘 Dostępne Quizy</h1>
 
       <Row style={{ justifyContent: 'center', width: "100%" }} >
 
@@ -39,23 +40,23 @@ function QuizList() {
                   <Card.Title><b>{quiz.name}</b></Card.Title>
 
                 </Card.Body>
-                <ListGroup className="list-group-flush">
+                <ListGroup className="list-group-flush" style={{ fontSize: '16px' }}>
                   <ListGroup.Item>Liczba pytań: <b>{quiz.number_of_questions}</b></ListGroup.Item>
                   <ListGroup.Item>Próg zdania: <b>{quiz.required_score_to_pass}</b>%</ListGroup.Item>
                   <ListGroup.Item>Czas na rozwiązanie: <b>{quiz.time}</b>min</ListGroup.Item>
                   <ListGroup.Item>Temat: <b>{quiz.topic}</b></ListGroup.Item>
                 </ListGroup>
-                <Card.Body>
+                <Card.Body className="d-flex justify-content-around">
                   <Card.Link className=" btn btn-warning" href={`/test/${quiz.code}`} >Start</Card.Link>
                   <Card.Link className=" btn btn-primary" href="#">Szczegóły</Card.Link>
                 </Card.Body>
               </Card>
 
-
-
             )
         }
-
+        {quizes.length === 0 && (
+          <p className="text-center text-muted">Brak dostępnych quizów.</p>
+        )}
       </Row>
 
 
