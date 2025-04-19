@@ -10,3 +10,4 @@ notatki.txt
 /backend/results/migrations
 /backend/accounts/__pycache__
 /backend/accounts/migrations
+/backend/backend/.env
