@@ -30,6 +30,8 @@ import { CreateQuiz } from './CreateQuiz/CreateQuiz';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { EditQuiz } from './EditQuiz/EditQuiz';
 import { QuestionsPanel } from './QuestionsPanel/QuestionsPanel';
+import { PasswordReset } from './PasswordReset/PasswordReset';
+import { ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirm';
 
 
 
@@ -122,7 +124,8 @@ function App() {
             <Route path="userpanel/createnewtest" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
-
+            <Route path="passwordreset" element={<PasswordReset />} />
+            <Route path="reset-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
           </Routes>
 
         </BrowserRouter>
