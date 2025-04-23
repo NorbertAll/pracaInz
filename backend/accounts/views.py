@@ -5,6 +5,12 @@ from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.mail import send_mail
+from rest_framework.views import APIView
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
 
 class UserRegistrationAPIView(GenericAPIView):
     permission_classes = (AllowAny, )
@@ -62,3 +68,47 @@ class UserInfoAPIView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+class PasswordResetView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email jest wymagany'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Nie znaleziono użytkownika'}, status=status.HTTP_404_NOT_FOUND)
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+
+        reset_link = f"http://localhost:3000/reset/password/confirm/{uid}/{token}/"
+
+        send_mail(
+            'Reset hasła',
+            f'Kliknij poniższy link, aby zresetować hasło:\n\n{reset_link}',
+            'noreply@twojadomena.com',
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({'message': 'Link resetujący został wysłany'}, status=status.HTTP_200_OK)
+class PasswordResetConfirmView(APIView):
+    def post(self, request, uidb64, token):
+        password = request.data.get("password")
+        if not password:
+            return Response({"error": "Nowe hasło jest wymagane"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = CustomUser.objects.get(pk=uid)
+        except (CustomUser.DoesNotExist, ValueError, TypeError, OverflowError):
+            return Response({"error": "Nieprawidłowy link resetujący"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({"error": "Token jest nieprawidłowy lub wygasł"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(password)
+        user.save()
+
+        return Response({"message": "Hasło zostało zaktualizowane"}, status=status.HTTP_200_OK)

@@ -125,7 +125,7 @@ function App() {
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
             <Route path="passwordreset" element={<PasswordReset />} />
-            <Route path="reset-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
+            <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />
           </Routes>
 
         </BrowserRouter>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
 import { Form, Button, Alert, Spinner, Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export function Registration() {
 
@@ -125,6 +126,10 @@ export function Registration() {
                                     "Zarejestruj się"
                                 )}
                             </Button>
+                            <div className="mt-3 d-flex justify-content-between">
+
+                                <Link to="/login" className="small" style={{ color: "primary", textDecoration: "none" }}> Masz hasło: Zaloguj się</Link>
+                            </div>
                         </Form>
                     </div>
                 </Col>

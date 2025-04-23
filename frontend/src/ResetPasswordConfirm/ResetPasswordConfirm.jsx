@@ -33,10 +33,8 @@ export const ResetPasswordConfirm = () => {
 
         setIsLoading(true);
         try {
-            await axios.post('http://127.0.0.1:8000/api/accounts/password-reset-confirm/', {
-                uid,
-                token,
-                new_password: formData.new_password
+            await axios.post(`http://127.0.0.1:8000/api/accounts/password/resetconfirm/${uid}/${token}/`, {
+                password: formData.new_password
             });
 
             setSuccessMessage('Hasło zostało zmienione. Możesz się teraz zalogować.');

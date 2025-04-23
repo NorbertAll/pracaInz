@@ -15,7 +15,7 @@ export const PasswordReset = () => {
         setIsLoading(true);
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/accounts/password-reset/', { email });
+            await axios.post('http://127.0.0.1:8000/api/accounts/password/reset/', { email });
             setSuccessMessage('Link do resetu hasła został wysłany na podany e-mail.');
         } catch (err) {
             console.error(err);

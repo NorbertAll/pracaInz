@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Alert, Spinner, Container, Row, Col } from 'react-bootstrap';
 
 export function Login() {
@@ -102,6 +102,10 @@ export function Login() {
                                 "Zaloguj się"
                             )}
                         </Button>
+                        <div className="mt-3 d-flex justify-content-between">
+                            <Link to="/passwordreset" className="small" style={{ color: "primary", textDecoration: "none" }}>Nie pamiętasz hasła?</Link>
+                            <Link to="/registraion" className="small" style={{ color: "primary", textDecoration: "none" }}> Nie masz hasła: Zarejestruj się</Link>
+                        </div>
                     </Form>
                 </Col>
             </Row>

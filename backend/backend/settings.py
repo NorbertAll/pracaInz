@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'questions',
     'quizes',
     'results',
+    'djoser',
     
 ]
 
@@ -213,3 +214,4 @@ EMAIL_SUBJECT_PREFIX="Password Recovery"
 
 
 CORS_ALLOW_ALL_ORIGINS =True
+
