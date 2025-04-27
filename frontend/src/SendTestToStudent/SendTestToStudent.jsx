@@ -1,32 +1,42 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "axios"
 import { useParams } from "react-router-dom";
-import Button from "react-bootstrap/Button";
+import Button from 'react-bootstrap/Button';
 
-export const QuestionsPanel = () => {
+export const QuestionsPanel = props => {
     const { id } = useParams();
     const [questions, setQuestions] = useState([]);
-    const [textQuestion, setTextQuestion] = useState("");
+    const [textQuestion, setTextQuestions] = useState("");
     const [answers, setAnswers] = useState([
-        { text: "", correct: false },
-        { text: "", correct: false }
+        { id: 0, text: "", correct: false },
+        { id: 0, text: "", correct: false }
     ]);
     const [edytowaneId, setEdytowaneId] = useState(null);
-
-    const fetchQuestions = async () => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}/`);
-            setQuestions(response.data.questions || []);
-        } catch (error) {
-            console.error("❌ Błąd pobierania pytań:", error);
-        }
-    };
-
     useEffect(() => {
-        fetchQuestions();
-    }, []);
 
-    const zmienTekstOdpowiedzi = (index, text) => {
+        const downloadAnswerAndQuestions = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}/`);
+                console.log(response.data);
+                const questions = response.data.questions;
+
+                if (questions && Array.isArray(questions)) {
+                    const processed = questions.map(q => ({
+                        ...q,
+                        answers: q.answers || [],
+                    }));
+                    setQuestions(processed);
+                } else {
+                    console.warn("Brak pytań w odpowiedzi:", response.data);
+                }
+            } catch (error) {
+                console.error("❌ Błąd pobierania pytań:", error);
+            }
+        };
+        downloadAnswerAndQuestions();
+
+    }, []);
+    const zmientaxtOdpowiedzi = (index, text) => {
         const nowe = [...answers];
         nowe[index].text = text;
         setAnswers(nowe);
@@ -46,51 +56,104 @@ export const QuestionsPanel = () => {
 
     const usunOdpowiedz = (index) => {
         const nowe = [...answers];
-        if (nowe[index].correct && nowe.length > 2) {
+        if (nowe[index].correct && nowe.length > 1) {
             nowe[0].correct = true;
         }
         nowe.splice(index, 1);
         setAnswers(nowe);
     };
 
-    const resetujFormularz = () => {
-        setTextQuestion("");
+    const zapiszPytanie = async () => {
+        if (!textQuestion.trim()) return;
+
+        try {
+
+            const res = await axios.post("http://127.0.0.1:8000/api/questions/", {
+                text: textQuestion,
+                quiz: id
+            });
+
+            const questionId = res.data.id;
+
+            // 2. POST odpowiedzi
+            for (const ans of answers) {
+                await axios.post("http://127.0.0.1:8000/api/answers/", {
+                    text: ans.text,
+                    correct: ans.correct,
+                    question: questionId
+                });
+            }
+
+
+            const refreshed = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}`);
+            const newQuestions = refreshed.data.questions;
+
+            if (Array.isArray(newQuestions)) {
+                setQuestions(newQuestions);
+            } else {
+                console.warn("Brak poprawnych danych pytań po zapisie:", refreshed.data);
+            }
+
+
+            setTextQuestions("");
+            setAnswers([
+                { text: "", correct: false },
+                { text: "", correct: false }
+            ]);
+            setEdytowaneId(null);
+
+            alert("Pytanie dodane!");
+        } catch (err) {
+            console.error("Błąd przy dodawaniu Question:", err);
+            alert("Nie udało się dodać Question.");
+        }
+    };
+
+    const rozpocznijEdycje = (pytanie) => {
+        setEdytowaneId(pytanie.id);
+        setTextQuestions(pytanie.text);
+        setAnswers([...pytanie.answers]);
+    };
+
+    const anulujEdycje = () => {
+        setEdytowaneId(null);
+        setTextQuestions("");
         setAnswers([
             { text: "", correct: false },
             { text: "", correct: false }
         ]);
-        setEdytowaneId(null);
     };
+    const handleSubmit = async (e) => {
+        const question = questions[0];
 
-    const zapiszPytanie = async () => {
-        if (!textQuestion.trim() || answers.length < 2) {
-            alert("Wprowadź treść pytania i co najmniej 2 odpowiedzi.");
+        if (!question || !question.text || question.answers.length < 2) {
+            alert("Brakuje danych Question lub odpowiedzi.");
             return;
         }
 
         try {
-            let questionId = edytowaneId;
+            let questionId = question.id;
 
-            if (questionId) {
-                await axios.patch(`http://127.0.0.1:8000/api/questions/${questionId}/`, {
-                    text: textQuestion
-                });
-            } else {
-                const res = await axios.post(`http://127.0.0.1:8000/api/questions/`, {
-                    text: textQuestion,
+            if (typeof questionId !== "number" || questionId < 1) {
+                const res = await axios.post("http://127.0.0.1:8000/api/questions/", {
+                    text: question.text,
                     quiz: id
                 });
                 questionId = res.data.id;
+            } else {
+                await axios.patch(`http://127.0.0.1:8000/api/questions/${questionId}/`, {
+                    text: question.text
+                });
             }
 
-            for (const ans of answers) {
+            for (const ans of question.answers) {
                 if (ans.id) {
                     await axios.patch(`http://127.0.0.1:8000/api/answers/${ans.id}/`, {
                         text: ans.text,
                         correct: ans.correct
                     });
                 } else {
-                    await axios.post(`http://127.0.0.1:8000/api/answers/`, {
+                    await axios.post("http://127.0.0.1:8000/api/answers/", {
                         text: ans.text,
                         correct: ans.correct,
                         question: questionId
@@ -98,46 +161,35 @@ export const QuestionsPanel = () => {
                 }
             }
 
-            await fetchQuestions();
-            resetujFormularz();
-            alert("Pytanie zapisane!");
+            alert("Zapisano pytanie i odpowiedzi!");
+
         } catch (err) {
-            console.error("❌ Błąd przy zapisie:", err);
-            alert("Nie udało się zapisać pytania.");
+            console.error("Błąd przy zapisie:", err);
+            alert("Coś poszło nie tak!");
         }
     };
+    const deleteQestion = async (idQuestion) => {
+        const confirmDelete = window.confirm("Czy na pewno chcesz usunąć to pytanie?");
+        if (!confirmDelete) return;
 
-    const rozpocznijEdycje = (pytanie) => {
-        setEdytowaneId(pytanie.id);
-        setTextQuestion(pytanie.text);
-        setAnswers((pytanie.answers || []).map(ans => ({
-            id: ans.id,
-            text: ans.text,
-            correct: ans.correct
-        })));
-    };
-
-    const deleteQuestion = async (idQuestion) => {
-        if (!window.confirm("Czy na pewno chcesz usunąć to pytanie?")) return;
         try {
             await axios.delete(`http://127.0.0.1:8000/api/questions/${idQuestion}/`);
-            await fetchQuestions();
+            const refreshed = await axios.get(`http://127.0.0.1:8000/api/questions_select/${id}`);
+            setQuestions(refreshed.data.questions);
             alert("Pytanie usunięte!");
         } catch (err) {
-            console.error("❌ Błąd usuwania:", err);
-            alert("Nie udało się usunąć pytania.");
+            console.error("❌ Błąd podczas usuwania Pytania:", err);
+            alert("Nie udało się usunąć Pytania.");
         }
     };
-
     return (
         <div className="container mt-4">
             <h4>{edytowaneId ? "Edytuj pytanie" : "Dodaj pytanie"}</h4>
-
             <input
                 className="form-control mb-3"
-                placeholder="Treść pytania"
+                placeholder="Treść questions"
                 value={textQuestion}
-                onChange={(e) => setTextQuestion(e.target.value)}
+                onChange={(e) => setTextQuestions(e.target.value)}
             />
 
             {answers.map((odp, index) => (
@@ -146,7 +198,7 @@ export const QuestionsPanel = () => {
                         className="form-control"
                         placeholder={`Odpowiedź ${index + 1}`}
                         value={odp.text}
-                        onChange={(e) => zmienTekstOdpowiedzi(index, e.target.value)}
+                        onChange={(e) => zmientaxtOdpowiedzi(index, e.target.value)}
                     />
                     <div className="input-group-text">
                         <input
@@ -175,7 +227,7 @@ export const QuestionsPanel = () => {
                     {edytowaneId ? "Zapisz zmiany" : "Dodaj pytanie"}
                 </button>
                 {edytowaneId && (
-                    <button className="btn btn-secondary" onClick={resetujFormularz}>
+                    <button className="btn btn-secondary" onClick={anulujEdycje}>
                         Anuluj
                     </button>
                 )}
@@ -196,20 +248,25 @@ export const QuestionsPanel = () => {
                         <tr key={p.id}>
                             <td>{p.text}</td>
                             <td>
+
                                 <ul className="mb-0">
                                     {(p.answers || []).map((o, i) => (
                                         <li key={i}>
                                             {o.text}{" "}
-                                            {o.correct && <strong className="text-success">(Poprawna)</strong>}
+                                            {o.correct && (
+                                                <strong className="text-success">(Poprawna)</strong>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
+
                             </td>
                             <td>
-                                <button className="btn btn-sm btn-warning me-2" onClick={() => rozpocznijEdycje(p)}>
+                                <button className="btn btn-sm btn-warning" onClick={() => rozpocznijEdycje(p)}>
                                     Edytuj
                                 </button>
-                                <button className="btn btn-sm btn-danger" onClick={() => deleteQuestion(p.id)}>
+                                &nbsp;&nbsp;
+                                <button className="btn btn-sm btn-danger" onClick={() => deleteQestion(p.id)}>
                                     Usuń
                                 </button>
                             </td>
@@ -224,6 +281,7 @@ export const QuestionsPanel = () => {
                     )}
                 </tbody>
             </table>
+            <Button variant="warning" type='submit' onClick={handleSubmit}>Edytuj</Button>
         </div>
     );
-};
+}

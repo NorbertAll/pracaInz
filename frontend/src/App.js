@@ -96,7 +96,7 @@ function App() {
                   ) : (
                     <>
                       <Nav.Link as={Link} to="login">ZALOGUJ</Nav.Link>
-                      <Nav.Link eventKey={2} as={Link} to="registraion">
+                      <Nav.Link as={Link} to="registraion">
                         ZAREJESTRUJ
                       </Nav.Link>
                     </>
@@ -111,7 +111,7 @@ function App() {
           </Navbar> : ""}
 
           <Routes>
-            <Route path="quiz" element={<Quiz />} />
+
             <Route path="" element={<MainPage />} />
             <Route path="exapmplequiz" element={<QuizList />} />
             <Route path="startquiz" element={<StartQuiz />} />
@@ -121,10 +121,11 @@ function App() {
             <Route path="userpanel" element={<UserPanel />} />
             <Route path="userpanel/createquiz" element={<CreateQuiz />} />
             <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
-            <Route path="userpanel/createnewtest" element={<CreateQuiz />} />
+            <Route path="userpanel/createnewtest/:id" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
             <Route path="passwordreset" element={<PasswordReset />} />
+            <Route path="userpanel/quiz" element={<Quiz />} />
             <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />
           </Routes>
 

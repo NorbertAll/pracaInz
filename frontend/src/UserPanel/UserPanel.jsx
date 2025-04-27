@@ -115,9 +115,8 @@ export function UserPanel() {
                 setLoggedIn(false);
                 setUsername("");
                 console.log("Log out successful!")
-                window.location.reload();
 
-
+                window.location.href = '/login';
             }
         }
         catch (error) {
@@ -172,10 +171,14 @@ export function UserPanel() {
         navigate(`/userpanel/questions/${id}`)
 
     }
-    const createtest = (data) => {
-        navigate(`/userpanel/createnewtest`)
+    const createtest = (x) => {
+        console.log(x);
+        const id = x
+        navigate(`/userpanel/createnewtest/${id}`)
     }
-
+    const sendtesttostudent = (data) => {
+        navigate(`/userpanel/quiz`)
+    }
     return (
         <div>
             <h1>Panel urzytkownika</h1>
@@ -185,20 +188,18 @@ export function UserPanel() {
                     <Nav.Link href="#testy">Panel urzytkonika</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="#studenci">Stwórz test</Nav.Link>
+                    <Nav.Link href="#testy">Testy</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
+                    <Nav.Link href="#results">Wyniki</Nav.Link>
                 </Nav.Item>
+
                 <Nav.Item>
-                    <Nav.Link eventKey="link-2">Link</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <button onClick={handleLogout}>Logout</button>
+                    <Button variant="danger" size="sm" onClick={handleLogout} className="ms-2">Wyloguj</Button>
                 </Nav.Item>
             </Nav>
 
-            <h3 className="mb-3" id="testy">Lista dostępnych testów</h3>
+            <h3 className="mb-3" id="tests">Lista dostępnych testów</h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
 
@@ -243,6 +244,9 @@ export function UserPanel() {
                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => deletequiz(quiz.id)}>
                                                     Usuń
                                                 </button>
+                                                <button className="btn btn-sm btn-outline-success" onClick={() => sendtesttostudent(quiz.id)}>
+                                                    Usuń
+                                                </button>
                                             </td>
                                         </tr>
                                     ) : null)}
@@ -254,9 +258,9 @@ export function UserPanel() {
 
 
             <br />
-            <Button variant="warning" onClick={createtest}>Stwórz Nowy Test</Button>
+            <Button variant="warning" onClick={() => createtest(userId)}>Stwórz Nowy Test</Button>
 
-            <h3 className="mb-3" id="testy">Lista dostępnych Wyników </h3>
+            <h3 className="mb-3" id="results">Lista dostępnych Wyników </h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
 
@@ -304,7 +308,7 @@ export function UserPanel() {
 
 
             <br />
-            <Button variant="warning" onClick={createtest}>Stwórz Nowy Test</Button>
+
         </div >
     )
 }

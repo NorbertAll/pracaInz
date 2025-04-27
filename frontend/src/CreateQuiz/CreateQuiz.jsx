@@ -4,9 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
+import { useParams } from "react-router-dom";
+
 
 export const CreateQuiz = props => {
-
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         name: "",
         topic: "",
@@ -14,7 +16,7 @@ export const CreateQuiz = props => {
         time: 0,
         required_score_to_pass: 0,
         is_public: true,
-        creator: 1,
+        creator: id,
     });
 
     const [successMessage, setSuccessMessage] = useState(null);
