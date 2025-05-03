@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Context } from '../helpers/Context';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Button, RadioGroup, FormControlLabel, Radio, Checkbox } from '@mui/material';
+import { Button, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+
 
 const Test = () => {
     const [quiz, setQuiz] = useState({});
@@ -13,43 +14,45 @@ const Test = () => {
 
     const { code } = useParams();
     const { setVisi } = useContext(Context);
-
+    const navigate = useNavigate();
     useEffect(() => {
         setVisi({ status: false });
         axios.get(`http://localhost:8000/api/quiz/${code}/`)
             .then(res => {
                 setQuiz(res.data);
                 const initialAnswers = {};
-                res.data.data.forEach((question, i) => {
+                res.data.data.forEach((question) => {
                     const questionKey = Object.keys(question)[0];
-                    initialAnswers[questionKey] = []; // Initialize an empty array for answers
+                    initialAnswers[questionKey] = []; // zachowujemy jako tablica
                 });
                 setOdp(initialAnswers);
             });
     }, [code]);
 
     const handleAnswerChange = (questionKey, answerText) => {
-        setOdp(prevOdp => {
-            const updatedAnswers = { ...prevOdp };
-            const index = updatedAnswers[questionKey].indexOf(answerText);
-            if (index > -1) {
-                updatedAnswers[questionKey].splice(index, 1); // Remove answer
-            } else {
-                updatedAnswers[questionKey].push(answerText); // Add answer
-            }
-            return updatedAnswers;
-        });
+        setOdp(prevOdp => ({
+            ...prevOdp,
+            [questionKey]: [answerText] // tylko jedna odpowiedź jako element w tablicy
+        }));
     };
 
     const sendAnswers = () => {
+        const allAnswered = Object.values(odp).every(ans => ans.length > 0);
+        if (!allAnswered) {
+            alert("Odpowiedz na wszystkie pytania przed wysłaniem.");
+            return;
+        }
+
         axios.post(`http://localhost:8000/api/check/${code}/`, odp)
             .then(response => {
                 const result = response.data.data;
-                if (result.resultBool) {
-                    alert(`Zdałeś z wynikiem: ${result.numberResult}%`);
-                } else {
-                    alert(`Niezadłeś z wynikiem: ${result.numberResult}%`);
-                }
+                localStorage.setItem("answers", JSON.stringify(odp));
+                navigate(`/results/${code}`)
+                //if (result.resultBool) {
+                //    alert(`Zdałeś z wynikiem: ${result.numberResult}%`);
+                //} else {
+                //    alert(`Nie zdałeś. Wynik: ${result.numberResult}%`);
+                //}
             })
             .catch(error => {
                 console.error('Błąd wysyłania odpowiedzi:', error);
@@ -65,7 +68,7 @@ const Test = () => {
 
                 return (
                     <div key={i}>
-                        <Typography component='h1' variant="h5">
+                        <Typography component='h1' variant="h6" sx={{ mt: 3 }}>
                             {questionKey}
                         </Typography>
                         <RadioGroup>
@@ -76,7 +79,7 @@ const Test = () => {
                                         <Radio
                                             value={answerText}
                                             color="primary"
-                                            checked={odp[questionKey]?.includes(answerText)}
+                                            checked={odp[questionKey]?.[0] === answerText}
                                             onChange={() => handleAnswerChange(questionKey, answerText)}
                                         />
                                     }
@@ -87,8 +90,13 @@ const Test = () => {
                     </div>
                 );
             })}
-            <Button variant="contained" endIcon={<SendIcon />} onClick={sendAnswers}>
-                Submit Answer
+            <Button
+                variant="contained"
+                endIcon={<SendIcon />}
+                onClick={sendAnswers}
+                sx={{ mt: 4 }}
+            >
+                Zatwierdź odpowiedzi
             </Button>
         </Container>
     );

@@ -217,21 +217,6 @@ def check(request, code=None):
             question[x].sort()
             if(request.data[x]==question[x]):
                 result=result+1
-        
-        
-        #if(answers.id==allanswer):
-        #    question.append(str(ans.question))
-    
-
-    
-    #for ans in answers:
-    #    print(ans.question)
-    #    print(ans.code)
-    #    print(ans.correct)
-    #
-   #
-    #print(code)
-    #print(request.data)
     r=result/c
     passE=False
     resultE=r*100
@@ -244,7 +229,51 @@ def check(request, code=None):
         "numberResult": resultE
     }})
 
+@api_view(['POST'])
+def check_with_feedback(request, code=None):
+    quiz = get_object_or_404(Quiz, code=code)
+    answers = Answer.objects.filter(question__quiz=quiz)
 
+    # Mapowanie pytań do odpowiedzi
+    correct_answers_map = {}
+    all_answers_map = {}
+    for answer in answers:
+        q_text = str(answer.question)
+        all_answers_map.setdefault(q_text, []).append(answer.text)
+        if answer.correct:
+            correct_answers_map.setdefault(q_text, []).append(answer.text)
 
+    # Odpowiedzi użytkownika
+    user_data = request.data
 
-    
+    # Obliczanie wyniku
+    correct_count = 0
+    total_questions = quiz.number_of_questions
+
+    questions_result = []
+    for question_text, all_options in all_answers_map.items():
+        correct = sorted(correct_answers_map.get(question_text, []))
+        user = sorted(user_data.get(question_text, [])) if question_text in user_data else []
+
+        is_correct = user == correct
+        if is_correct:
+            correct_count += 1
+
+        questions_result.append({
+            "question": question_text,
+            "answers": all_options,
+            "correct_answers": correct,
+            "user_answers": user,
+            "is_correct": is_correct
+        })
+
+    score = int((correct_count / total_questions) * 100)
+    passed = score >= quiz.required_score_to_pass
+
+    return Response({
+        "result": {
+            "score": score,
+            "passed": passed
+        },
+        "questions": questions_result
+    })

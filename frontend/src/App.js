@@ -32,6 +32,7 @@ import { EditQuiz } from './EditQuiz/EditQuiz';
 import { QuestionsPanel } from './QuestionsPanel/QuestionsPanel';
 import { PasswordReset } from './PasswordReset/PasswordReset';
 import { ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirm';
+import QuizResult from './QuizResult/QuizResult';
 
 
 
@@ -127,6 +128,7 @@ function App() {
             <Route path="passwordreset" element={<PasswordReset />} />
             <Route path="userpanel/quiz" element={<Quiz />} />
             <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />
+            <Route path="/results/:code" element={<QuizResult />} />
           </Routes>
 
         </BrowserRouter>
