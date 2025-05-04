@@ -102,12 +102,12 @@ export function UserPanel() {
     const editQuiz = (id) => navigate(`/userpanel/editquiz/${id}`);
     const showQuestions = (id) => navigate(`/userpanel/questions/${id}`);
     const createTest = () => navigate(`/userpanel/createnewtest/${userId}`);
-    const sendTestToStudent = (id) => navigate(`/userpanel/sendtesttouser/${id}`);
+    const sendTestToStudent = (id) => navigate(`/userpanel/sendtesttostudent/${id}`);
 
     return (
         <div>
             <h1>Panel użytkownika</h1>
-
+            <br /><br />
             <Nav justify variant="tabs" defaultActiveKey="/userpanel">
                 <Nav.Item>
                     <Nav.Link href="#testy">Panel użytkownika</Nav.Link>
@@ -122,7 +122,7 @@ export function UserPanel() {
                     <Button variant="danger" size="sm" onClick={handleLogout} className="ms-2">Wyloguj</Button>
                 </Nav.Item>
             </Nav>
-
+            <br /><br /><br /><br />
             <h3 className="mb-3" id="testy">Lista dostępnych testów</h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
@@ -164,7 +164,7 @@ export function UserPanel() {
 
             <br />
             <Button variant="warning" onClick={createTest}>Stwórz nowy test</Button>
-
+            <br /><br /><br /><br />
             <h3 className="mb-3 mt-4" id="wyniki">Lista wyników</h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
@@ -197,6 +197,7 @@ export function UserPanel() {
                         </tbody>
                     )}
                 </table>
+                <br /><br /><br /><br />
             </div>
         </div>
     );

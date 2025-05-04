@@ -33,7 +33,7 @@ import { QuestionsPanel } from './QuestionsPanel/QuestionsPanel';
 import { PasswordReset } from './PasswordReset/PasswordReset';
 import { ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirm';
 import QuizResult from './QuizResult/QuizResult';
-import { SentTestToStudent } from './SendTestToStudent/SendTestToStudent';
+import SendTestToStudent from './SendTestToStudent/SendTestToStudent';
 
 
 
@@ -127,7 +127,7 @@ function App() {
             <Route path="userpanel/createnewtest/:id" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
-            <Route path="userpanel/sendtesttouser/:id" element={<SentTestToStudent />} />
+            <Route path="/userpanel/sendtesttostudent/:quizId" element={<SendTestToStudent />} />
             <Route path="passwordreset" element={<PasswordReset />} />
             <Route path="userpanel/quiz" element={<Quiz />} />
             <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />

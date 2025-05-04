@@ -21,6 +21,8 @@ from rest_framework.views import APIView # type: ignore
 import json
 from django.core.serializers import serialize
 from rest_framework.decorators import action # type: ignore
+from django.core.mail import send_mail
+from django.conf import settings
 
 class QuizViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -300,3 +302,45 @@ def check_with_feedback(request, code=None):
         },
         "questions": questions_result
     })
+
+class SendMailAPIView(APIView):
+    def post(self, request):
+        students = request.data.get('students', [])
+        code = request.data.get('code', '')
+
+        if not code or not students:
+            return Response({"error": "Brak danych"}, status=status.HTTP_400_BAD_REQUEST)
+
+        for student in students:
+            name = student.get('name', 'Student')
+            email = student.get('email')
+
+            if not email:
+                continue  # pomiń brakujący e-mail
+
+            subject = "Dostęp do quizu"
+            message = f"""
+Cześć {name},
+
+Kliknij w poniższy link, aby rozpocząć quiz:
+http://localhost:3000/quiz/{code}
+
+Powodzenia!
+"""
+            html_message = f"""
+<p>Cześć <strong>{name}</strong>,</p>
+<p>Kliknij w poniższy link, aby rozpocząć quiz:</p>
+<p><a href="http://localhost:3000/quiz/{code}">Rozpocznij quiz</a></p>
+<p>Powodzenia!</p>
+"""
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+                html_message=html_message
+            )
+
+        return Response({"success": True}, status=status.HTTP_200_OK)
