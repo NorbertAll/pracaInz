@@ -175,7 +175,8 @@ class QuizView(APIView):
         title=str(quiz)
         data=questions
         time=quiz.time
-        return Response({"data":data, "time":time, "title":title})
+        id=quiz.id
+        return Response({"data":data, "time":time, "title":title, "id":id})
 
 class QuestionViewSelect(APIView):
     def get(self, request, id=None):
@@ -195,39 +196,62 @@ class QuestionViewSelect(APIView):
 
 @api_view(['POST'])
 def check(request, code=None):
-    result =0
-    answers=Answer.objects.all()
-    quiz=Quiz.objects.get(code=code)
-    required_score_to_pass=float(quiz.required_score_to_pass)/100
-    c=int(quiz.number_of_questions)
-    question={}
-    for q in quiz.get_all_questions():
-        question[str(q)] = []
-    allanswer=Quiz.objects.get(code=code).id#pobranie id quizu
-    for ans in answers:
-        print(ans)
-        if(str(ans.question) in question.keys()):
-            if(ans.correct==True):
-                question[str(ans.question)].append(ans.text)
-    print(question)   
-    print(request.data)  
-    for x in request.data:
-        if(x in question.keys()):
-            request.data[x].sort()
-            question[x].sort()
-            if(request.data[x]==question[x]):
-                result=result+1
-    r=result/c
-    passE=False
-    resultE=r*100
-    if(r>=required_score_to_pass):
-        passE=True
+    quiz = get_object_or_404(Quiz, code=code)
+    answers = Answer.objects.filter(question__quiz=quiz)
 
- 
-    return Response({"data":{
-        "resultBool": passE,
-        "numberResult": resultE
-    }})
+    correct_answers_map = {}
+    all_answers_map = {}
+    for answer in answers:
+        q_text = answer.question.text  # ✅ poprawka tu
+        all_answers_map.setdefault(q_text, []).append(answer.text)
+        if answer.correct:
+            correct_answers_map.setdefault(q_text, []).append(answer.text)
+
+    name = request.data.get("name", "")
+    last_name = request.data.get("last_name", "")
+    indeks = request.data.get("indeks", "")
+    user_answers = request.data.get("answers", {})  # ✅ poprawka tu
+
+    correct_count = 0
+    total_questions = quiz.number_of_questions
+    questions_result = []
+
+    for question_text, all_options in all_answers_map.items():
+        correct = sorted(correct_answers_map.get(question_text, []))
+        user = sorted(user_answers.get(question_text, [])) if question_text in user_answers else []
+
+        is_correct = user == correct
+        if is_correct:
+            correct_count += 1
+
+        questions_result.append({
+            "question": question_text,
+            "answers": all_options,
+            "correct_answers": correct,
+            "user_answers": user,
+            "is_correct": is_correct
+        })
+
+    score = int((correct_count / total_questions) * 100)
+    passed = score >= quiz.required_score_to_pass
+
+    Result.objects.create(
+        quiz=quiz,
+        creator=quiz.creator,
+        score=score,
+        name=name,
+        last_name=last_name,
+        indeks=indeks,
+        passed=passed
+    )
+
+    return Response({
+        "result": {
+            "score": score,
+            "passed": passed
+        },
+        "questions": questions_result
+    })
 
 @api_view(['POST'])
 def check_with_feedback(request, code=None):
@@ -238,7 +262,7 @@ def check_with_feedback(request, code=None):
     correct_answers_map = {}
     all_answers_map = {}
     for answer in answers:
-        q_text = str(answer.question)
+        q_text = answer.question.text
         all_answers_map.setdefault(q_text, []).append(answer.text)
         if answer.correct:
             correct_answers_map.setdefault(q_text, []).append(answer.text)

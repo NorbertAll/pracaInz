@@ -10,6 +10,8 @@ class Result(models.Model):
     name= models.CharField(max_length=120)
     last_name= models.CharField(max_length=120)
     indeks= models.CharField(max_length=120)
-
+    passed = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self):
         return str(self.pk)

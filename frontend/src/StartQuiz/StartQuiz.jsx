@@ -20,7 +20,7 @@ const StartQuiz = () => {
   });
 
   const onSubmit = (data) => {
-    navigate(`/test/${data.code}`);
+    navigate(`/quiz/${data.code}`);
   };
 
   return (

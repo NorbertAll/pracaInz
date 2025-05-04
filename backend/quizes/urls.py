@@ -15,7 +15,7 @@ router.register('results', ResultViewSet, basename='results')
 urlpatterns = [
     path('', include(router.urls)),
     path('quiz/<str:code>/', QuizView.as_view()),
-    path('quiz/<str:id>/', QuizView.as_view()),
+    
     path('check/<str:code>/', views.check, name="quiz-done"),
     path('questions_select/<str:id>/', QuestionViewSelect.as_view()),
     path('check_feedback/<str:code>/', check_with_feedback, name='check_feedback'),

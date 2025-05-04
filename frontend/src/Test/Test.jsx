@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 const Test = () => {
+
     const [quiz, setQuiz] = useState({});
     const [odp, setOdp] = useState({});
 
@@ -43,20 +44,11 @@ const Test = () => {
             return;
         }
 
-        axios.post(`http://localhost:8000/api/check/${code}/`, odp)
-            .then(response => {
-                const result = response.data.data;
-                localStorage.setItem("answers", JSON.stringify(odp));
-                navigate(`/results/${code}`)
-                //if (result.resultBool) {
-                //    alert(`Zdałeś z wynikiem: ${result.numberResult}%`);
-                //} else {
-                //    alert(`Nie zdałeś. Wynik: ${result.numberResult}%`);
-                //}
-            })
-            .catch(error => {
-                console.error('Błąd wysyłania odpowiedzi:', error);
-            });
+
+        localStorage.setItem("answers", JSON.stringify(odp));
+        navigate(`/results/${code}`)
+
+
     };
 
     return (

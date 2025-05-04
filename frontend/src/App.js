@@ -18,7 +18,7 @@ import { MainPage } from './MainPage/MainPage';
 import { Login } from './Login/Login';
 import { Registration } from './Registration/Registration';
 import StartQuiz from './StartQuiz/StartQuiz';
-import { Quiz } from './Quiz/Quiz';
+import Quiz from './Quiz/Quiz';
 import Test from './Test/Test';
 import { UserPanel } from './UserPanel/UserPanel'
 import { useState } from 'react';
@@ -33,6 +33,7 @@ import { QuestionsPanel } from './QuestionsPanel/QuestionsPanel';
 import { PasswordReset } from './PasswordReset/PasswordReset';
 import { ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirm';
 import QuizResult from './QuizResult/QuizResult';
+import { SentTestToStudent } from './SendTestToStudent/SendTestToStudent';
 
 
 
@@ -119,12 +120,14 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="registraion" element={<Registration />} />
             <Route path="test/:code" element={<Test />} />
+            <Route path="quiz/:code" element={<Quiz />} />
             <Route path="userpanel" element={<UserPanel />} />
             <Route path="userpanel/createquiz" element={<CreateQuiz />} />
             <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
             <Route path="userpanel/createnewtest/:id" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />
+            <Route path="userpanel/sendtesttouser/:id" element={<SentTestToStudent />} />
             <Route path="passwordreset" element={<PasswordReset />} />
             <Route path="userpanel/quiz" element={<Quiz />} />
             <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />

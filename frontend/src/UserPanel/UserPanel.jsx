@@ -176,8 +176,8 @@ export function UserPanel() {
         const id = x
         navigate(`/userpanel/createnewtest/${id}`)
     }
-    const sendtesttostudent = (data) => {
-        navigate(`/userpanel/quiz`)
+    const sendtesttostudent = (id) => {
+        navigate(`/userpanel/sendtesttouser/${id}`)
     }
     return (
         <div>
@@ -244,8 +244,9 @@ export function UserPanel() {
                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => deletequiz(quiz.id)}>
                                                     Usuń
                                                 </button>
+                                                &nbsp;&nbsp;
                                                 <button className="btn btn-sm btn-outline-success" onClick={() => sendtesttostudent(quiz.id)}>
-                                                    Usuń
+                                                    Wysłanie testów
                                                 </button>
                                             </td>
                                         </tr>
