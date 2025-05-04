@@ -8,20 +8,19 @@ from questions.models import Question, Answer
 from results.models import Result
 from django.views.generic import ListView
 from django.http import JsonResponse
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser # type: ignore
 from questions.models import Question, Answer
 from results.models import Result
 from .serializers import AnswerSerializer, QuestionSerializer, QuizSerializer, ResultSerializer
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-# Create your views here.
-from rest_framework import viewsets
+from rest_framework.response import Response # type: ignore
+from rest_framework import status# type: ignore
+from rest_framework.decorators import api_view, authentication_classes, permission_classes # type: ignore
+from rest_framework import viewsets # type: ignore
 from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
+from rest_framework.views import APIView # type: ignore
 import json
 from django.core.serializers import serialize
-from rest_framework.decorators import action
+from rest_framework.decorators import action # type: ignore
 
 class QuizViewSet(viewsets.ViewSet):
     def list(self, request):
