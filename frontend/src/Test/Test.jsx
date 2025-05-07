@@ -7,33 +7,60 @@ import Container from '@mui/material/Container';
 import { Button, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-
 const Test = () => {
-
     const [quiz, setQuiz] = useState({});
     const [odp, setOdp] = useState({});
+    const [timeLeft, setTimeLeft] = useState(null);
 
     const { code } = useParams();
     const { setVisi } = useContext(Context);
     const navigate = useNavigate();
+
     useEffect(() => {
         setVisi({ status: false });
         axios.get(`http://localhost:8000/api/quiz/${code}/`)
             .then(res => {
                 setQuiz(res.data);
+
                 const initialAnswers = {};
                 res.data.data.forEach((question) => {
                     const questionKey = Object.keys(question)[0];
-                    initialAnswers[questionKey] = []; // zachowujemy jako tablica
+                    initialAnswers[questionKey] = [];
                 });
                 setOdp(initialAnswers);
+
+                if (res.data.time) {
+                    setTimeLeft(res.data.time * 60);
+                }
             });
     }, [code]);
+
+    useEffect(() => {
+        if (!quiz.time || timeLeft === null) return;
+
+        if (timeLeft <= 0) {
+            sendAnswers();
+            return;
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    sendAnswers();
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [quiz.time, timeLeft]);
 
     const handleAnswerChange = (questionKey, answerText) => {
         setOdp(prevOdp => ({
             ...prevOdp,
-            [questionKey]: [answerText] // tylko jedna odpowiedź jako element w tablicy
+            [questionKey]: [answerText]
         }));
     };
 
@@ -44,16 +71,24 @@ const Test = () => {
             return;
         }
 
-
         localStorage.setItem("answers", JSON.stringify(odp));
-        navigate(`/results/${code}`)
+        navigate(`/results/${code}`);
+    };
 
-
+    const formatTime = (seconds) => {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
     };
 
     return (
         <Container component="main" maxWidth="xs">
-            <h1>{quiz.title}</h1>
+            <Typography variant="h4" gutterBottom>{quiz.title}</Typography>
+            {timeLeft !== null && (
+                <Typography variant="h6" sx={{ mt: 1, color: timeLeft <= 30 ? 'red' : 'black' }}>
+                    ⏳ Pozostały czas: {formatTime(timeLeft)}
+                </Typography>
+            )}
             {quiz.data && quiz.data.map((questionData, i) => {
                 const questionKey = Object.keys(questionData)[0];
                 const answers = questionData[questionKey];

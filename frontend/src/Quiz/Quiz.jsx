@@ -13,6 +13,7 @@ const Quiz = () => {
         last_name: "",
         indeks: "",
     });
+    const [timeLeft, setTimeLeft] = useState(null);
     const [quiz, setQuiz] = useState({});
     const [odp, setOdp] = useState({});
     const { code } = useParams();
@@ -29,6 +30,9 @@ const Quiz = () => {
                     initialAnswers[questionKey] = [];
                 });
                 setOdp(initialAnswers);
+                if (res.data.time) {
+                    setTimeLeft(res.data.time * 60);
+                }
             });
     }, [code]);
 
@@ -81,6 +85,7 @@ const Quiz = () => {
                     odp={odp}
                     handleAnswerChange={handleAnswerChange}
                     sendAnswers={sendAnswers}
+
                 />
             )}
         </Container>
