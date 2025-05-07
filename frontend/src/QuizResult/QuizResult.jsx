@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Typography, Box, List, ListItem, ListItemText } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const QuizResult = () => {
     const { code } = useParams();
     const [result, setResult] = useState(null);
 
     useEffect(() => {
-        axios.post(`http://localhost:8000/api/check_feedback/${code}/`, JSON.parse(localStorage.getItem("answers") || "{}"))
+        axios.post(
+            `http://localhost:8000/api/check_feedback/${code}/`,
+            JSON.parse(localStorage.getItem("answers") || "{}")
+        )
             .then(res => {
                 setResult(res.data);
             })
@@ -26,31 +29,46 @@ const QuizResult = () => {
                 {result.result.passed ? "✅ Zdałeś test!" : "❌ Nie zdałeś testu."}
             </Typography>
 
-            {result.questions.map((q, index) => (
-                <Box key={index} my={4}>
-                    <Typography variant="h6">{q.question}</Typography>
-                    <List>
-                        {q.answers.map((ans, i) => {
-                            const isCorrect = q.correct_answers.includes(ans);
-                            const isUserAnswer = q.user_answers.includes(ans);
+            {result.questions.map((q, index) => {
+                const hasAnswer = q.user_answers && q.user_answers.length > 0 && q.user_answers[0] !== "brak odpowiedzi";
 
-                            let color = "inherit";
-                            if (isCorrect && isUserAnswer) color = "green";
-                            else if (!isCorrect && isUserAnswer) color = "red";
-                            else if (isCorrect) color = "green";
+                return (
+                    <Box key={index} my={4}>
+                        <Typography variant="h6">{q.question}</Typography>
+                        <List>
+                            {q.answers.map((ans, i) => {
+                                const isCorrect = q.correct_answers.includes(ans);
+                                const isUserAnswer = q.user_answers.includes(ans);
 
-                            return (
-                                <ListItem key={i} dense>
+                                let color = "inherit";
+                                if (isCorrect && isUserAnswer) color = "green";
+                                else if (!isCorrect && isUserAnswer) color = "red";
+                                else if (isCorrect) color = "green";
+
+                                return (
+                                    <ListItem key={i} dense>
+                                        <ListItemText
+                                            primary={ans}
+                                            primaryTypographyProps={{ style: { color } }}
+                                        />
+                                    </ListItem>
+                                );
+                            })}
+
+                            {!hasAnswer && (
+                                <ListItem dense>
                                     <ListItemText
-                                        primary={ans}
-                                        primaryTypographyProps={{ style: { color } }}
+                                        primary="Brak odpowiedzi"
+                                        primaryTypographyProps={{
+                                            style: { fontStyle: "italic", color: "gray" }
+                                        }}
                                     />
                                 </ListItem>
-                            );
-                        })}
-                    </List>
-                </Box>
-            ))}
+                            )}
+                        </List>
+                    </Box>
+                );
+            })}
         </Container>
     );
 };

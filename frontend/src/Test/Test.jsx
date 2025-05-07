@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Context } from '../helpers/Context';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Button, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Button, RadioGroup, FormControlLabel, Radio, Box } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 const Test = () => {
@@ -65,13 +65,14 @@ const Test = () => {
     };
 
     const sendAnswers = () => {
-        const allAnswered = Object.values(odp).every(ans => ans.length > 0);
-        if (!allAnswered) {
-            alert("Odpowiedz na wszystkie pytania przed wysłaniem.");
-            return;
+        const filledAnswers = { ...odp };
+        for (const key in filledAnswers) {
+            if (filledAnswers[key].length === 0) {
+                filledAnswers[key] = ["brak odpowiedzi"];
+            }
         }
 
-        localStorage.setItem("answers", JSON.stringify(odp));
+        localStorage.setItem("answers", JSON.stringify(filledAnswers));
         navigate(`/results/${code}`);
     };
 
@@ -89,15 +90,17 @@ const Test = () => {
                     ⏳ Pozostały czas: {formatTime(timeLeft)}
                 </Typography>
             )}
+
             {quiz.data && quiz.data.map((questionData, i) => {
                 const questionKey = Object.keys(questionData)[0];
                 const answers = questionData[questionKey];
 
                 return (
-                    <div key={i}>
-                        <Typography component='h1' variant="h6" sx={{ mt: 3 }}>
+                    <Box key={i} sx={{ mt: 3 }}>
+                        <Typography component='h1' variant="h6">
                             {questionKey}
                         </Typography>
+
                         <RadioGroup>
                             {answers.map((answerText, id) => (
                                 <FormControlLabel
@@ -114,9 +117,10 @@ const Test = () => {
                                 />
                             ))}
                         </RadioGroup>
-                    </div>
+                    </Box>
                 );
             })}
+
             <Button
                 variant="contained"
                 endIcon={<SendIcon />}
