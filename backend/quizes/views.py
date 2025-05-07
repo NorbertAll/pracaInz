@@ -176,8 +176,12 @@ class QuizView(APIView):
         title=str(quiz)
         data=questions
         time=quiz.time
+        topic=quiz.topic
+        required_score_to_pass=quiz.required_score_to_pass
+
+        number_of_questions=quiz.number_of_questions
         id=quiz.id
-        return Response({"data":data, "time":time, "title":title, "id":id})
+        return Response({"data":data, "time":time, "title":title, "id":id, "topic":topic, "required_score_to_pass":required_score_to_pass, "number_of_questions":number_of_questions, })
 
 class QuestionViewSelect(APIView):
     def get(self, request, id=None):
