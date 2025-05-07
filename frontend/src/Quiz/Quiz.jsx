@@ -50,23 +50,19 @@ const Quiz = () => {
         });
     };
 
-    const sendAnswers = () => {
-        const allAnswered = Object.values(odp).every(ans => ans.length > 0);
-        if (!allAnswered) {
-            alert("Odpowiedz na wszystkie pytania przed wysłaniem.");
-            return;
-        }
+    const sendAnswers = (finalAnswers = odp) => {
+
 
         const payload = {
             ...formData,
             quiz_id: quiz.id,
-            answers: odp
+            answers: finalAnswers
         };
 
         axios.post(`http://localhost:8000/api/check/${code}/`, payload)
             .then(res => {
-                alert("Test wysłano");
-                // Możesz przejść dalej, np. navigate("/result") itp.
+
+
             })
             .catch(err => console.error(err));
     };
@@ -85,7 +81,7 @@ const Quiz = () => {
                     odp={odp}
                     handleAnswerChange={handleAnswerChange}
                     sendAnswers={sendAnswers}
-
+                    time={quiz.time}
                 />
             )}
         </Container>
