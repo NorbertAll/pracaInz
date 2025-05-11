@@ -14,7 +14,6 @@ import {
 } from "react-router-dom";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { MainPage } from './MainPage/MainPage';
-
 import { Login } from './Login/Login';
 import { Registration } from './Registration/Registration';
 import StartQuiz from './StartQuiz/StartQuiz';
@@ -25,7 +24,6 @@ import { useState } from 'react';
 import { Context } from './helpers/Context';
 import { useEffect } from 'react'
 import axios from "axios"
-import { MainUserPanel } from './MainUserPanel/MainUserPanel';
 import { CreateQuiz } from './CreateQuiz/CreateQuiz';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { EditQuiz } from './EditQuiz/EditQuiz';
@@ -123,7 +121,6 @@ function App() {
             <Route path="quiz/:code" element={<Quiz />} />
             <Route path="userpanel" element={<UserPanel />} />
             <Route path="userpanel/createquiz" element={<CreateQuiz />} />
-            <Route path="userpanel/mainuserpanel" element={<MainUserPanel />} />
             <Route path="userpanel/createnewtest/:id" element={<CreateQuiz />} />
             <Route path="userpanel/editquiz/:id" element={<EditQuiz />} />
             <Route path="userpanel/questions/:id" element={<QuestionsPanel />} />

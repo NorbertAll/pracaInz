@@ -104,7 +104,7 @@ export function Login() {
                         </Button>
                         <div className="mt-3 d-flex justify-content-between">
                             <Link to="/passwordreset" className="small" style={{ color: "primary", textDecoration: "none" }}>Nie pamiętasz hasła?</Link>
-                            <Link to="/registraion" className="small" style={{ color: "primary", textDecoration: "none" }}> Nie masz hasła: Zarejestruj się</Link>
+                            <Link to="/registraion" className="small" style={{ color: "primary", textDecoration: "none" }}> Nie masz konta: Zarejestruj się</Link>
                         </div>
                     </Form>
                 </Col>

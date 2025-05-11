@@ -128,7 +128,7 @@ export function Registration() {
                             </Button>
                             <div className="mt-3 d-flex justify-content-between">
 
-                                <Link to="/login" className="small" style={{ color: "primary", textDecoration: "none" }}> Masz hasło: Zaloguj się</Link>
+                                <Link to="/login" className="small" style={{ color: "primary", textDecoration: "none" }}> Masz konto: Zaloguj się</Link>
                             </div>
                         </Form>
                     </div>
