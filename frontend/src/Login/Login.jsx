@@ -32,8 +32,10 @@ export function Login() {
             setSuccessMessage("Logowanie zakończone sukcesem.");
             localStorage.setItem("accessToken", response.data.tokens.access);
             localStorage.setItem("refreshToken", response.data.tokens.refresh);
-            navigate("/");
-            window.location.reload();
+            setTimeout(() => {
+                navigate("/");
+                window.location.reload();
+            }, 1500);
         } catch (error) {
             if (error.response && error.response.data) {
                 Object.keys(error.response.data).forEach(field => {
@@ -49,64 +51,72 @@ export function Login() {
     };
 
     return (
-        <Container className="mt-5">
-            <Row className="justify-content-center">
-                <Col md={6} className="text-center">
-                    <h2 className="mb-4">Logowanie</h2>
+        <Container fluid className="py-5 d-flex justify-content-center align-items-center bg-light" style={{ minHeight: '85vh' }}>
+            <Row className="w-100 justify-content-center">
+                <Col xs={10} sm={8} md={6} lg={4} xl={3}>
+                    <div className="p-4 rounded shadow-sm bg-white text-center">
+                        <h2 className="mb-4">Logowanie</h2>
 
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
-                    <Form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "300px" }}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Email:</Form.Label>
-                            <Form.Control
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                placeholder="Wprowadź email"
-                                required
-                            />
-                        </Form.Group>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group className="mb-3 text-start">
+                                <Form.Label>Email:</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Wprowadź email"
+                                    required
+                                    autoFocus
+                                />
+                            </Form.Group>
 
-                        <Form.Group className="mb-4">
-                            <Form.Label>Hasło:</Form.Label>
-                            <Form.Control
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="Wprowadź hasło"
-                                required
-                            />
-                        </Form.Group>
+                            <Form.Group className="mb-4 text-start">
+                                <Form.Label>Hasło:</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    placeholder="Wprowadź hasło"
+                                    required
+                                />
+                            </Form.Group>
 
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-100"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Spinner
-                                        as="span"
-                                        animation="border"
-                                        size="sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                    /> Logowanie...
-                                </>
-                            ) : (
-                                "Zaloguj się"
-                            )}
-                        </Button>
-                        <div className="mt-3 d-flex justify-content-between">
-                            <Link to="/passwordreset" className="small" style={{ color: "primary", textDecoration: "none" }}>Nie pamiętasz hasła?</Link>
-                            <Link to="/registraion" className="small" style={{ color: "primary", textDecoration: "none" }}> Nie masz konta: Zarejestruj się</Link>
-                        </div>
-                    </Form>
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-100"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Spinner
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                        /> Logowanie...
+                                    </>
+                                ) : (
+                                    "Zaloguj się"
+                                )}
+                            </Button>
+
+                            <div className="mt-3 d-flex justify-content-between">
+                                <Link to="/passwordreset" className="small" style={{ textDecoration: "none" }}>
+                                    Nie pamiętasz hasła?
+                                </Link>
+                                <Link to="/registration" className="small" style={{ textDecoration: "none" }}>
+                                    Nie masz konta? Zarejestruj się
+                                </Link>
+                            </div>
+                        </Form>
+                    </div>
                 </Col>
             </Row>
         </Container>
