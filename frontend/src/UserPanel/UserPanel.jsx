@@ -141,9 +141,9 @@ export function UserPanel() {
                         <tbody><tr><td colSpan="7">Ładowanie testów...</td></tr></tbody>
                     ) : (
                         <tbody>
-                            {quizes.map((quiz) => (
+                            {quizes.map((quiz, index) => (
                                 <tr key={quiz.id}>
-                                    <td>{quiz.id}</td>
+                                    <td>{index + 1}</td>
                                     <td>{quiz.name}</td>
                                     <td>{quiz.topic}</td>
                                     <td>{quiz.number_of_questions}</td>
@@ -175,6 +175,7 @@ export function UserPanel() {
                             <th>Nazwisko</th>
                             <th>Indeks</th>
                             <th>Wynik</th>
+                            <th>Zdane</th>
                             <th>Akcja</th>
                         </tr>
                     </thead>
@@ -182,18 +183,22 @@ export function UserPanel() {
                         <tbody><tr><td colSpan="6">Ładowanie wyników...</td></tr></tbody>
                     ) : (
                         <tbody>
-                            {results.map((result) => (
-                                <tr key={result.id}>
-                                    <td>{result.id}</td>
-                                    <td>{result.name}</td>
-                                    <td>{result.last_name}</td>
-                                    <td>{result.indeks}</td>
-                                    <td>{result.score}</td>
-                                    <td>
-                                        <button className="btn btn-sm btn-outline-danger" onClick={() => deleteResult(result.id)}>Usuń</button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {results.map((result, index) => {
+                                const rowClass = result.passed ? 'table-success' : 'table-danger';
+                                return (
+                                    <tr key={result.id} className={rowClass}>
+                                        <td>{index + 1}</td>
+                                        <td>{result.name}</td>
+                                        <td>{result.last_name}</td>
+                                        <td>{result.indeks}</td>
+                                        <td>{result.score}</td>
+                                        <td>{result.passed ? 'Tak' : 'Nie'}</td>
+                                        <td>
+                                            <button className="btn btn-sm btn-outline-danger" onClick={() => deleteResult(result.id)}>Usuń</button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     )}
                 </table>

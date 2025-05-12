@@ -96,7 +96,7 @@ function App() {
                   ) : (
                     <>
                       <Nav.Link as={Link} to="login">ZALOGUJ</Nav.Link>
-                      <Nav.Link as={Link} to="registraion">
+                      <Nav.Link as={Link} to="registration">
                         ZAREJESTRUJ
                       </Nav.Link>
                     </>
@@ -116,7 +116,7 @@ function App() {
             <Route path="exapmplequiz" element={<QuizList />} />
             <Route path="startquiz" element={<StartQuiz />} />
             <Route path="login" element={<Login />} />
-            <Route path="registraion" element={<Registration />} />
+            <Route path="registration" element={<Registration />} />
             <Route path="test/:code" element={<Test />} />
             <Route path="quiz/:code" element={<Quiz />} />
             <Route path="userpanel" element={<UserPanel />} />
