@@ -32,6 +32,7 @@ import { PasswordReset } from './PasswordReset/PasswordReset';
 import { ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirm';
 import QuizResult from './QuizResult/QuizResult';
 import SendTestToStudent from './SendTestToStudent/SendTestToStudent';
+import { TestInfo } from './TestInfo/TestInfo';
 
 
 
@@ -129,6 +130,7 @@ function App() {
             <Route path="userpanel/quiz" element={<Quiz />} />
             <Route path="reset/password/confirm/:uid/:token" element={<ResetPasswordConfirm />} />
             <Route path="/results/:code" element={<QuizResult />} />
+            <Route path="/test-info/:id" element={<TestInfo />} />
           </Routes>
 
         </BrowserRouter>

@@ -48,7 +48,7 @@ function QuizList() {
                 </ListGroup>
                 <Card.Body className="d-flex justify-content-around">
                   <Card.Link className=" btn btn-warning" href={`/test/${quiz.code}`} >Start</Card.Link>
-                  <Card.Link className=" btn btn-primary" href="#">Szczegóły</Card.Link>
+                  <Card.Link className=" btn btn-primary" href={`/test-info/${quiz.id}`}>Szczegóły</Card.Link>
                 </Card.Body>
               </Card>
 
