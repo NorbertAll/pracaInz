@@ -63,7 +63,16 @@ const Test = () => {
             [questionKey]: [answerText]
         }));
     };
-
+    const handleBack = () => {
+        if (window.confirm("Czy na Anulować odpowiedzi i wrócić do listy pytań")) {
+            window.location.href = "/exapmplequiz";
+        }
+    }
+    const confirmAndSend = () => {
+        if (window.confirm("Czy na pewno chcesz zakończyć test i wysłać odpowiedzi?")) {
+            sendAnswers();
+        }
+    };
     const sendAnswers = () => {
         const filledAnswers = { ...odp };
         for (const key in filledAnswers) {
@@ -124,10 +133,14 @@ const Test = () => {
             <Button
                 variant="contained"
                 endIcon={<SendIcon />}
-                onClick={sendAnswers}
+                onClick={confirmAndSend}
                 sx={{ mt: 4 }}
             >
                 Zatwierdź odpowiedzi
+            </Button>
+
+            <Button variant="secondary" className="w-100" onClick={handleBack}>
+                Anuluj
             </Button>
         </Container>
     );
