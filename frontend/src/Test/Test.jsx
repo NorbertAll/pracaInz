@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Button, RadioGroup, FormControlLabel, Radio, Box } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import ConfirmDialog from '../Components/ConfirmDialog'; // ← Upewnij się, że ścieżka jest poprawna
 
 const Test = () => {
     const [quiz, setQuiz] = useState({});
@@ -16,19 +17,20 @@ const Test = () => {
     const { setVisi } = useContext(Context);
     const navigate = useNavigate();
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogType, setDialogType] = useState(""); // "send" lub "cancel"
+
     useEffect(() => {
         setVisi({ status: false });
         axios.get(`http://localhost:8000/api/quiz/${code}/`)
             .then(res => {
                 setQuiz(res.data);
-
                 const initialAnswers = {};
                 res.data.data.forEach((question) => {
                     const questionKey = Object.keys(question)[0];
                     initialAnswers[questionKey] = [];
                 });
                 setOdp(initialAnswers);
-
                 if (res.data.time) {
                     setTimeLeft(res.data.time * 60);
                 }
@@ -63,16 +65,30 @@ const Test = () => {
             [questionKey]: [answerText]
         }));
     };
+
     const handleBack = () => {
-        if (window.confirm("Czy na Anulować odpowiedzi i wrócić do listy pytań")) {
-            window.location.href = "/exapmplequiz";
-        }
-    }
+        setDialogType("cancel");
+        setDialogOpen(true);
+    };
+
     const confirmAndSend = () => {
-        if (window.confirm("Czy na pewno chcesz zakończyć test i wysłać odpowiedzi?")) {
+        setDialogType("send");
+        setDialogOpen(true);
+    };
+
+    const handleDialogConfirm = () => {
+        setDialogOpen(false);
+        if (dialogType === "cancel") {
+            window.location.href = "/exapmplequiz"
+        } else if (dialogType === "send") {
             sendAnswers();
         }
     };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
     const sendAnswers = () => {
         const filledAnswers = { ...odp };
         for (const key in filledAnswers) {
@@ -94,6 +110,7 @@ const Test = () => {
     return (
         <Container component="main" maxWidth="xs">
             <Typography variant="h4" gutterBottom>{quiz.title}</Typography>
+
             {timeLeft !== null && (
                 <Typography variant="h6" sx={{ mt: 1, color: timeLeft <= 30 ? 'red' : 'black' }}>
                     ⏳ Pozostały czas: {formatTime(timeLeft)}
@@ -109,7 +126,6 @@ const Test = () => {
                         <Typography component='h1' variant="h6">
                             {questionKey}
                         </Typography>
-
                         <RadioGroup>
                             {answers.map((answerText, id) => (
                                 <FormControlLabel
@@ -135,13 +151,32 @@ const Test = () => {
                 endIcon={<SendIcon />}
                 onClick={confirmAndSend}
                 sx={{ mt: 4 }}
+                fullWidth
             >
                 Zatwierdź odpowiedzi
             </Button>
 
-            <Button variant="secondary" className="w-100" onClick={handleBack}>
+            <Button
+                variant="outlined"
+                color="error"
+                onClick={handleBack}
+                fullWidth
+                sx={{ mt: 2 }}
+            >
                 Anuluj
             </Button>
+
+            <ConfirmDialog
+                open={dialogOpen}
+                title={dialogType === "send" ? "Zakończyć test?" : "Anulować test?"}
+                message={
+                    dialogType === "send"
+                        ? "Czy na pewno chcesz zakończyć test i wysłać odpowiedzi?"
+                        : "Czy na pewno chcesz anulować odpowiedzi i wrócić do listy quizów?"
+                }
+                onConfirm={handleDialogConfirm}
+                onClose={handleDialogClose}
+            />
         </Container>
     );
 };
