@@ -19,6 +19,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields= '__all__'
 
 class ResultSerializer(serializers.ModelSerializer):
+    quiz = QuizSerializer(read_only=True)
     class Meta:
         model=Result
         fields= '__all__'

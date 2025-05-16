@@ -174,6 +174,7 @@ export function UserPanel() {
                             <th>Imię</th>
                             <th>Nazwisko</th>
                             <th>Indeks</th>
+                            <th>Temat testu</th>
                             <th>Wynik</th>
                             <th>Zdane</th>
                             <th>Akcja</th>
@@ -183,6 +184,8 @@ export function UserPanel() {
                         <tbody><tr><td colSpan="6">Ładowanie wyników...</td></tr></tbody>
                     ) : (
                         <tbody>
+                            {console.log(results)
+                            }
                             {results.map((result, index) => {
                                 const rowClass = result.passed ? 'table-success' : 'table-danger';
                                 return (
@@ -191,6 +194,7 @@ export function UserPanel() {
                                         <td>{result.name}</td>
                                         <td>{result.last_name}</td>
                                         <td>{result.indeks}</td>
+                                        <td>{result.quiz?.topic || "Brak danych"}</td>
                                         <td>{result.score}</td>
                                         <td>{result.passed ? 'Tak' : 'Nie'}</td>
                                         <td>
