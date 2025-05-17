@@ -10,9 +10,10 @@ export function UserPanel() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
     const [quizes, setQuizes] = useState([]);
+    const [searchTopic, setSearchTopic] = useState("");
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [sortAscending, setSortAscending] = useState(true);
     useEffect(() => {
         const fetchAll = async () => {
             try {
@@ -54,7 +55,17 @@ export function UserPanel() {
 
         fetchAll();
     }, []);
-
+    const sortByTopic = () => {
+        const sorted = [...results].sort((a, b) => {
+            const topicA = a.quiz?.topic?.toLowerCase() || '';
+            const topicB = b.quiz?.topic?.toLowerCase() || '';
+            return sortAscending
+                ? topicA.localeCompare(topicB)
+                : topicB.localeCompare(topicA);
+        });
+        setResults(sorted);
+        setSortAscending(!sortAscending);
+    };
     const handleLogout = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
@@ -165,6 +176,20 @@ export function UserPanel() {
             <br />
             <Button variant="warning" onClick={createTest}>Stwórz nowy test</Button>
             <br /><br /><br /><br />
+            <div className="mb-3">
+                <label htmlFor="searchTopic" className="form-label">Wyszukaj testy po temacie:</label>
+                <input
+                    id="searchTopic"
+                    type="text"
+                    className="form-control"
+                    placeholder="Podaj temat"
+                    value={searchTopic}
+                    onChange={(e) => setSearchTopic(e.target.value)}
+                />
+            </div>
+            <Button variant="secondary" size="sm" onClick={() => setSearchTopic("")}>
+                Wyczyść
+            </Button>
             <h3 className="mb-3 mt-4" id="wyniki">Lista wyników</h3>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
@@ -174,7 +199,9 @@ export function UserPanel() {
                             <th>Imię</th>
                             <th>Nazwisko</th>
                             <th>Indeks</th>
-                            <th>Temat testu</th>
+                            <th onClick={sortByTopic} style={{ cursor: "pointer" }}>
+                                Temat testu {sortAscending ? "↑" : "↓"}
+                            </th>
                             <th>Wynik</th>
                             <th>Zdane</th>
                             <th>Akcja</th>
@@ -186,23 +213,28 @@ export function UserPanel() {
                         <tbody>
                             {console.log(results)
                             }
-                            {results.map((result, index) => {
-                                const rowClass = result.passed ? 'table-success' : 'table-danger';
-                                return (
-                                    <tr key={result.id} className={rowClass}>
-                                        <td>{index + 1}</td>
-                                        <td>{result.name}</td>
-                                        <td>{result.last_name}</td>
-                                        <td>{result.indeks}</td>
-                                        <td>{result.quiz?.topic || "Brak danych"}</td>
-                                        <td>{result.score}</td>
-                                        <td>{result.passed ? 'Tak' : 'Nie'}</td>
-                                        <td>
-                                            <button className="btn btn-sm btn-outline-danger" onClick={() => deleteResult(result.id)}>Usuń</button>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {results
+                                .filter(result =>
+                                    result.quiz?.topic?.toLowerCase().includes(searchTopic.toLowerCase())
+                                )
+
+                                .map((result, index) => {
+                                    const rowClass = result.passed ? 'table-success' : 'table-danger';
+                                    return (
+                                        <tr key={result.id} className={rowClass}>
+                                            <td>{index + 1}</td>
+                                            <td>{result.name}</td>
+                                            <td>{result.last_name}</td>
+                                            <td>{result.indeks}</td>
+                                            <td>{result.quiz?.topic || "Brak danych"}</td>
+                                            <td>{result.score}</td>
+                                            <td>{result.passed ? 'Tak' : 'Nie'}</td>
+                                            <td>
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteResult(result.id)}>Usuń</button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                         </tbody>
                     )}
                 </table>
