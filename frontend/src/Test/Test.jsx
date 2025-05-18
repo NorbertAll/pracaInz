@@ -108,7 +108,7 @@ const Test = () => {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="md">
             <Typography variant="h4" gutterBottom>{quiz.title}</Typography>
 
             {timeLeft !== null && (

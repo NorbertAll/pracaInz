@@ -86,7 +86,7 @@ class PasswordResetView(APIView):
 
         send_mail(
             'Reset hasła',
-            f'Kliknij poniższy link, aby zresetować hasło:\n\n{reset_link}',
+            f'Kliknij poniższy link, aby zresetować hasło do Platformy Quizowo Egzamninacyjnej :\n\n{reset_link} \n\n Jeśli nie prosiłeś o Zmianę hasła Nie klikaj Linku \n\n Pozdrawiam Norbert Gutkowski',
             'noreply@twojadomena.com',
             [email],
             fail_silently=False,

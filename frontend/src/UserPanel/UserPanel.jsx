@@ -142,6 +142,7 @@ export function UserPanel() {
                             <th>#</th>
                             <th>Nazwa testu</th>
                             <th>Temat</th>
+                            <th>Code</th>
                             <th>Liczba pytań</th>
                             <th>Próg zaliczenia</th>
                             <th>Czas</th>
@@ -157,6 +158,7 @@ export function UserPanel() {
                                     <td>{index + 1}</td>
                                     <td>{quiz.name}</td>
                                     <td>{quiz.topic}</td>
+                                    <td>{quiz.code}</td>
                                     <td>{quiz.number_of_questions}</td>
                                     <td>{quiz.required_score_to_pass}</td>
                                     <td>{quiz.time}</td>

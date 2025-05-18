@@ -224,6 +224,11 @@ export const QuestionsPanel = () => {
                     )}
                 </tbody>
             </table>
+            <br />
+            <button className="btn btn-primary" onClick={() => window.location.href = '/userpanel'}>
+                ← Powrót do Panelu Użytkownika
+            </button>
+            <br />
         </div>
     );
 };

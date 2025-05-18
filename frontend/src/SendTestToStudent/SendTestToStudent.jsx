@@ -121,6 +121,11 @@ function SendTestToStudent() {
                     Nie udało się załadować kodu quizu. Upewnij się, że quiz istnieje.
                 </div>
             )}
+            <br /><br />
+            <button className="btn btn-primary" onClick={() => window.location.href = '/userpanel'}>
+                ← Powrót do Panelu Użytkownika
+            </button>
+            <br />
         </div>
     );
 }

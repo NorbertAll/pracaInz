@@ -109,7 +109,7 @@ export function Login() {
 
                             <div className="mt-3 d-flex justify-content-between">
                                 <Link to="/passwordreset" className="small" style={{ textDecoration: "none" }}>
-                                    Nie pamiętasz hasła?
+                                    Nie pamiętasz hasła? Zrestuj
                                 </Link>
                                 <Link to="/registration" className="small" style={{ textDecoration: "none" }}>
                                     Nie masz konta? Zarejestruj się

@@ -143,6 +143,10 @@ export const EditQuiz = () => {
 
                             <Button type="submit" variant="warning" className="w-100">Zapisz zmiany</Button>
                         </Form>
+                        <br />
+                        <button className="btn btn-primary" onClick={() => window.location.href = '/userpanel'}>
+                            ← Powrót do Panelu Użytkownika
+                        </button>
                     </div>
                 </Col>
             </Row>

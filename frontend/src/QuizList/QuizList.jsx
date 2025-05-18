@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import './QuizList.css';
 import './QuizList.css'
 function QuizList() {
 
@@ -27,7 +26,7 @@ function QuizList() {
 
     <>
 
-      <h1 className="text-center mb-4 titlePage">📘 Dostępne Quizy</h1>
+      <h2 className="quiz-title">📘 Dostępne Quizy</h2>
 
       <Row style={{ justifyContent: 'center', width: "100%" }} >
 

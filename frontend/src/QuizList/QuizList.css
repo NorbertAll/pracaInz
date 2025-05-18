@@ -1,3 +1,15 @@
-.titlePage{
+.titlePage {
     font-size: 5em;
+}
+
+@media (max-width: 575px) {
+    .quiz-title::before {
+        content: '';
+    }
+}
+
+@media (min-width: 576px) {
+    .quiz-title::before {
+        content: '📘 ';
+    }
 }
