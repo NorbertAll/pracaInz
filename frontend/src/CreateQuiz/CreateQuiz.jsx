@@ -112,6 +112,10 @@ export const CreateQuiz = props => {
                     <Button variant="warning" type="submit" className="w-100 mt-3">
                         Zapisz
                     </Button>
+                    <br />
+                    <button className="btn btn-danger w-100 mt-3" onClick={() => window.location.href = '/userpanel'}>
+                        Anuluj
+                    </button>
                 </Form>
             </Card>
         </Container>

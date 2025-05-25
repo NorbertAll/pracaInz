@@ -178,6 +178,7 @@ export function UserPanel() {
             <br />
             <Button variant="warning" onClick={createTest}>Stwórz nowy test</Button>
             <br /><br /><br /><br />
+            <h3 className="mb-3 mt-4" id="wyniki">Lista wyników</h3>
             <div className="mb-3">
                 <label htmlFor="searchTopic" className="form-label">Wyszukaj testy po temacie:</label>
                 <input
@@ -192,7 +193,7 @@ export function UserPanel() {
             <Button variant="secondary" size="sm" onClick={() => setSearchTopic("")}>
                 Wyczyść
             </Button>
-            <h3 className="mb-3 mt-4" id="wyniki">Lista wyników</h3>
+
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered align-middle shadow">
                     <thead className="table-primary">

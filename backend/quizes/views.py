@@ -165,23 +165,26 @@ class ResultViewSet(viewsets.ViewSet):
         result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)       
 class QuizView(APIView):
-    def get (self, request, code=None):
-        quiz=Quiz.objects.get(code=code)
+    def get(self, request, code=None):
+        try:
+            quiz = Quiz.objects.get(code=code)
+        except Quiz.DoesNotExist:
+            return Response({"error": "Quiz nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+
         questions = []
         for q in quiz.get_questions():
-            answers=[]
-            for a in q.get_answers():
-                answers.append(a.text)
+            answers = [a.text for a in q.get_answers()]
             questions.append({str(q): answers})
-        title=str(quiz)
-        data=questions
-        time=quiz.time
-        topic=quiz.topic
-        required_score_to_pass=quiz.required_score_to_pass
 
-        number_of_questions=quiz.number_of_questions
-        id=quiz.id
-        return Response({"data":data, "time":time, "title":title, "id":id, "topic":topic, "required_score_to_pass":required_score_to_pass, "number_of_questions":number_of_questions, })
+        return Response({
+            "data": questions,
+            "time": quiz.time,
+            "title": str(quiz),
+            "id": quiz.id,
+            "topic": quiz.topic,
+            "required_score_to_pass": quiz.required_score_to_pass,
+            "number_of_questions": quiz.number_of_questions,
+        })
 
 class QuestionViewSelect(APIView):
     def get(self, request, id=None):

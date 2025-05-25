@@ -53,6 +53,19 @@ const QuizForm = ({ quiz, odp, handleAnswerChange, sendAnswers }) => {
             window.location.href = '/';
         }, 1000);
     };
+    const handleSendA = () => {
+        const filledAnswers = { ...odp };
+        for (const key in filledAnswers) {
+            if (filledAnswers[key].length === 0) {
+                filledAnswers[key] = ["brak odpowiedzi"];
+            }
+        }
+        sendAnswers(filledAnswers);
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    };
 
     const formatTime = (seconds) => {
         const min = Math.floor(seconds / 60);
@@ -109,7 +122,15 @@ const QuizForm = ({ quiz, odp, handleAnswerChange, sendAnswers }) => {
             >
                 Zatwierdź odpowiedzi
             </Button>
-
+            <Button
+                variant="outlined"
+                color="error"
+                onClick={handleSendA}
+                fullWidth
+                sx={{ mt: 2 }}
+            >
+                Anuluj
+            </Button>
             <Snackbar
                 open={openSnackbar}
                 autoHideDuration={3000}

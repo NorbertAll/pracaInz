@@ -71,10 +71,7 @@ export const EditQuiz = () => {
                         {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Id:</Form.Label>
-                                <Form.Control type="text" value={formData.id} disabled readOnly />
-                            </Form.Group>
+
 
                             <Form.Group className="mb-3">
                                 <Form.Label>Dziedzina:</Form.Label>
